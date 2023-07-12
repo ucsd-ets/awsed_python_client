@@ -1,6 +1,19 @@
 # aws-ed-api-client
 A client library for accessing AWSEd API
 
+# Changes I've Made From OpenAPI Generated Spec
+
+## client.py
+
+Edited the headers.
+```
+def get_headers(self) -> Dict[str, str]:
+    """Get headers to be used in authenticated endpoints"""
+    auth_header_value = f"AWSEd api_key={self.token}"
+    return {self.auth_header_name: auth_header_value, **self.headers}
+```
+
+
 ## Usage
 First, create a client:
 

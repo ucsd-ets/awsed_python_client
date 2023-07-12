@@ -37,7 +37,7 @@ def _parse_response(*, client: Client, response: httpx.Response) -> Optional[str
         response_403 = cast(str, response.json())
         return response_403
     if response.status_code == HTTPStatus.UNAUTHORIZED:
-        response_401 = cast(str, response.text)
+        response_401 = cast(str, response.json())
         return response_401
     if response.status_code == HTTPStatus.OK:
         response_200 = cast(str, response.json())

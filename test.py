@@ -1,6 +1,6 @@
 from aws_ed_api_client import AuthenticatedClient
 
-client = AuthenticatedClient(prefix="AWSEd api_key=", base_url="https://awsed.ucsd.edu", token="PKWE...")
+client = AuthenticatedClient(base_url="https://awsed.ucsd.edu", token="PKWE...")
 
 print(client.get_headers())
 

@@ -44,7 +44,7 @@ def _parse_response(*, client: Client, response: httpx.Response) -> Optional[Uni
 
         return response_404
     if response.status_code == HTTPStatus.UNAUTHORIZED:
-        response_401 = ListCoursesResultJson.from_dict(response.text)
+        response_401 = ListCoursesResultJson.from_dict(response.json())
 
         return response_401
     if response.status_code == HTTPStatus.OK:

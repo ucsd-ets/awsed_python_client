@@ -15,7 +15,6 @@ def _get_kwargs(
     client: Client,
 ) -> Dict[str, Any]:
     url = "{}/api/users/{username}".format(client.base_url, username=username)
-    print(url)
 
     headers: Dict[str, str] = client.get_headers()
     cookies: Dict[str, Any] = client.get_cookies()
@@ -35,7 +34,7 @@ def _parse_response(*, client: Client, response: httpx.Response) -> Optional[Uni
         response_403 = cast(str, response.json())
         return response_403
     if response.status_code == HTTPStatus.UNAUTHORIZED:
-        response_401 = UserResultJson.from_dict(response.text)
+        response_401 = UserResultJson.from_dict(response.json())
 
         return response_401
     if response.status_code == HTTPStatus.OK:

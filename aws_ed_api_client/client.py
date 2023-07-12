@@ -62,5 +62,5 @@ class AuthenticatedClient(Client):
 
     def get_headers(self) -> Dict[str, str]:
         """Get headers to be used in authenticated endpoints"""
-        auth_header_value = f"AWSEd api_key={self.token}"
+        auth_header_value = f"{self.prefix} {self.token}" if self.prefix else self.token
         return {self.auth_header_name: auth_header_value, **self.headers}
