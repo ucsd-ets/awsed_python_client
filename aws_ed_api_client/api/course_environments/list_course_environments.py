@@ -1,10 +1,11 @@
 from http import HTTPStatus
-from typing import Any, Dict, Optional, Union, cast
+from typing import Any, Dict, Optional, Union
 
 import httpx
 
 from ... import errors
 from ...client import Client
+from ...models.api_error_result import ApiErrorResult
 from ...models.list_course_environments_request_body import ListCourseEnvironmentsRequestBody
 from ...models.list_course_environments_result_json import ListCourseEnvironmentsResultJson
 from ...types import UNSET, Response
@@ -40,18 +41,23 @@ def _get_kwargs(
 
 def _parse_response(
     *, client: Client, response: httpx.Response
-) -> Optional[Union[ListCourseEnvironmentsResultJson, str]]:
+) -> Optional[Union[ApiErrorResult, ListCourseEnvironmentsResultJson]]:
     if response.status_code == HTTPStatus.FORBIDDEN:
-        response_403 = cast(str, response.json())
-        return response_403
-    if response.status_code == HTTPStatus.INTERNAL_SERVER_ERROR:
-        response_500 = ListCourseEnvironmentsResultJson.from_dict(response.json())
+        response_403 = ApiErrorResult.from_dict(response.json())
 
-        return response_500
+        return response_403
     if response.status_code == HTTPStatus.OK:
         response_200 = ListCourseEnvironmentsResultJson.from_dict(response.json())
 
         return response_200
+    if response.status_code == HTTPStatus.INTERNAL_SERVER_ERROR:
+        response_500 = ApiErrorResult.from_dict(response.json())
+
+        return response_500
+    if response.status_code == HTTPStatus.UNAUTHORIZED:
+        response_401 = ApiErrorResult.from_dict(response.json())
+
+        return response_401
     if client.raise_on_unexpected_status:
         raise errors.UnexpectedStatus(response.status_code, response.content)
     else:
@@ -60,7 +66,7 @@ def _parse_response(
 
 def _build_response(
     *, client: Client, response: httpx.Response
-) -> Response[Union[ListCourseEnvironmentsResultJson, str]]:
+) -> Response[Union[ApiErrorResult, ListCourseEnvironmentsResultJson]]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -73,7 +79,7 @@ def sync_detailed(
     *,
     client: Client,
     request: "ListCourseEnvironmentsRequestBody",
-) -> Response[Union[ListCourseEnvironmentsResultJson, str]]:
+) -> Response[Union[ApiErrorResult, ListCourseEnvironmentsResultJson]]:
     """List course environments
 
     Args:
@@ -84,7 +90,7 @@ def sync_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[ListCourseEnvironmentsResultJson, str]]
+        Response[Union[ApiErrorResult, ListCourseEnvironmentsResultJson]]
     """
 
     kwargs = _get_kwargs(
@@ -104,7 +110,7 @@ def sync(
     *,
     client: Client,
     request: "ListCourseEnvironmentsRequestBody",
-) -> Optional[Union[ListCourseEnvironmentsResultJson, str]]:
+) -> Optional[Union[ApiErrorResult, ListCourseEnvironmentsResultJson]]:
     """List course environments
 
     Args:
@@ -115,7 +121,7 @@ def sync(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[ListCourseEnvironmentsResultJson, str]
+        Union[ApiErrorResult, ListCourseEnvironmentsResultJson]
     """
 
     return sync_detailed(
@@ -128,7 +134,7 @@ async def asyncio_detailed(
     *,
     client: Client,
     request: "ListCourseEnvironmentsRequestBody",
-) -> Response[Union[ListCourseEnvironmentsResultJson, str]]:
+) -> Response[Union[ApiErrorResult, ListCourseEnvironmentsResultJson]]:
     """List course environments
 
     Args:
@@ -139,7 +145,7 @@ async def asyncio_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[ListCourseEnvironmentsResultJson, str]]
+        Response[Union[ApiErrorResult, ListCourseEnvironmentsResultJson]]
     """
 
     kwargs = _get_kwargs(
@@ -157,7 +163,7 @@ async def asyncio(
     *,
     client: Client,
     request: "ListCourseEnvironmentsRequestBody",
-) -> Optional[Union[ListCourseEnvironmentsResultJson, str]]:
+) -> Optional[Union[ApiErrorResult, ListCourseEnvironmentsResultJson]]:
     """List course environments
 
     Args:
@@ -168,7 +174,7 @@ async def asyncio(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[ListCourseEnvironmentsResultJson, str]
+        Union[ApiErrorResult, ListCourseEnvironmentsResultJson]
     """
 
     return (

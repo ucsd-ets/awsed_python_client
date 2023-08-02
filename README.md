@@ -1,11 +1,17 @@
 # aws-ed-api-client
-A client library for accessing AWSEd API
+A client library for accessing AWSEd API. Ensure you do the following steps below if you're going to update the existing client.
 
-# Changes I've Made From OpenAPI Generated Spec
+# How to Generate/Update Client
+
+Delete the dir: `aws_ed_api_client`
+
+Run `openapi-python-client generate --url https://awsed-dev.ucsd.edu/v3/api-docs/awsed-api` (remove dev for prod) to generate the client.
+
+This will create `aws-ed-api-client`. Move `aws_ed_api_client` from outside of that folder and into the project root. Delete `aws-ed-api-client`.
 
 ## client.py
 
-Edited the headers.
+Edited the headers in `aws_ed_api_client/client.py`. Change `get_headers()` near the bottom of the page so that the custom header for the API can be used.
 ```
 def get_headers(self) -> Dict[str, str]:
     """Get headers to be used in authenticated endpoints"""
@@ -13,6 +19,9 @@ def get_headers(self) -> Dict[str, str]:
     return {self.auth_header_name: auth_header_value, **self.headers}
 ```
 
+Run `test.py` to ensure that the client works. You will need to update the credential. You may also refer to that file to see how the API client works.
+
+# Default Documentation From OpenAPI Generator
 
 ## Usage
 First, create a client:

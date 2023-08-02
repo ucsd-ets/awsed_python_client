@@ -1,10 +1,11 @@
 from http import HTTPStatus
-from typing import Any, Dict, Optional, Union, cast
+from typing import Any, Dict, Optional, Union
 
 import httpx
 
 from ... import errors
 from ...client import Client
+from ...models.api_error_result import ApiErrorResult
 from ...models.course_result import CourseResult
 from ...types import Response
 
@@ -29,25 +30,30 @@ def _get_kwargs(
     }
 
 
-def _parse_response(*, client: Client, response: httpx.Response) -> Optional[Union[CourseResult, str]]:
+def _parse_response(*, client: Client, response: httpx.Response) -> Optional[Union[ApiErrorResult, CourseResult]]:
     if response.status_code == HTTPStatus.FORBIDDEN:
-        response_403 = cast(str, response.json())
-        return response_403
-    if response.status_code == HTTPStatus.NOT_FOUND:
-        response_404 = CourseResult.from_dict(response.json())
+        response_403 = ApiErrorResult.from_dict(response.json())
 
-        return response_404
+        return response_403
     if response.status_code == HTTPStatus.OK:
         response_200 = CourseResult.from_dict(response.json())
 
         return response_200
+    if response.status_code == HTTPStatus.NOT_FOUND:
+        response_404 = ApiErrorResult.from_dict(response.json())
+
+        return response_404
+    if response.status_code == HTTPStatus.UNAUTHORIZED:
+        response_401 = ApiErrorResult.from_dict(response.json())
+
+        return response_401
     if client.raise_on_unexpected_status:
         raise errors.UnexpectedStatus(response.status_code, response.content)
     else:
         return None
 
 
-def _build_response(*, client: Client, response: httpx.Response) -> Response[Union[CourseResult, str]]:
+def _build_response(*, client: Client, response: httpx.Response) -> Response[Union[ApiErrorResult, CourseResult]]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -60,7 +66,7 @@ def sync_detailed(
     course: str,
     *,
     client: Client,
-) -> Response[Union[CourseResult, str]]:
+) -> Response[Union[ApiErrorResult, CourseResult]]:
     """Describe a course
 
     Args:
@@ -71,7 +77,7 @@ def sync_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[CourseResult, str]]
+        Response[Union[ApiErrorResult, CourseResult]]
     """
 
     kwargs = _get_kwargs(
@@ -91,7 +97,7 @@ def sync(
     course: str,
     *,
     client: Client,
-) -> Optional[Union[CourseResult, str]]:
+) -> Optional[Union[ApiErrorResult, CourseResult]]:
     """Describe a course
 
     Args:
@@ -102,7 +108,7 @@ def sync(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[CourseResult, str]
+        Union[ApiErrorResult, CourseResult]
     """
 
     return sync_detailed(
@@ -115,7 +121,7 @@ async def asyncio_detailed(
     course: str,
     *,
     client: Client,
-) -> Response[Union[CourseResult, str]]:
+) -> Response[Union[ApiErrorResult, CourseResult]]:
     """Describe a course
 
     Args:
@@ -126,7 +132,7 @@ async def asyncio_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[CourseResult, str]]
+        Response[Union[ApiErrorResult, CourseResult]]
     """
 
     kwargs = _get_kwargs(
@@ -144,7 +150,7 @@ async def asyncio(
     course: str,
     *,
     client: Client,
-) -> Optional[Union[CourseResult, str]]:
+) -> Optional[Union[ApiErrorResult, CourseResult]]:
     """Describe a course
 
     Args:
@@ -155,7 +161,7 @@ async def asyncio(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[CourseResult, str]
+        Union[ApiErrorResult, CourseResult]
     """
 
     return (

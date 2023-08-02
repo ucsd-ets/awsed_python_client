@@ -9,23 +9,21 @@ if TYPE_CHECKING:
     from ..models.player_json import PlayerJson
 
 
-T = TypeVar("T", bound="UserLaunchProfileJson")
+T = TypeVar("T", bound="LaunchProfileJson")
 
 
 @attr.s(auto_attribs=True)
-class UserLaunchProfileJson:
+class LaunchProfileJson:
     """
     Attributes:
         name (Union[Unset, str]):
         application (Union[Unset, ApplicationJson]):
         player (Union[Unset, PlayerJson]):
-        course (Union[Unset, str]):
     """
 
     name: Union[Unset, str] = UNSET
     application: Union[Unset, "ApplicationJson"] = UNSET
     player: Union[Unset, "PlayerJson"] = UNSET
-    course: Union[Unset, str] = UNSET
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
@@ -38,8 +36,6 @@ class UserLaunchProfileJson:
         if not isinstance(self.player, Unset):
             player = self.player.to_dict()
 
-        course = self.course
-
         field_dict: Dict[str, Any] = {}
         field_dict.update(self.additional_properties)
         field_dict.update({})
@@ -49,8 +45,6 @@ class UserLaunchProfileJson:
             field_dict["application"] = application
         if player is not UNSET:
             field_dict["player"] = player
-        if course is not UNSET:
-            field_dict["course"] = course
 
         return field_dict
 
@@ -76,17 +70,14 @@ class UserLaunchProfileJson:
         else:
             player = PlayerJson.from_dict(_player)
 
-        course = d.pop("course", UNSET)
-
-        user_launch_profile_json = cls(
+        launch_profile_json = cls(
             name=name,
             application=application,
             player=player,
-            course=course,
         )
 
-        user_launch_profile_json.additional_properties = d
-        return user_launch_profile_json
+        launch_profile_json.additional_properties = d
+        return launch_profile_json
 
     @property
     def additional_keys(self) -> List[str]:

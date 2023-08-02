@@ -1,20 +1,21 @@
 from http import HTTPStatus
-from typing import Any, Dict, Optional, Union, cast
+from typing import Any, Dict, Optional, Union
 
 import httpx
 
 from ... import errors
 from ...client import Client
-from ...models.user_result_json import UserResultJson
+from ...models.api_error_result import ApiErrorResult
+from ...models.list_launch_profiles_json import ListLaunchProfilesJson
 from ...types import Response
 
 
 def _get_kwargs(
-    username: str,
+    course: str,
     *,
     client: Client,
 ) -> Dict[str, Any]:
-    url = "{}/api/users/{username}".format(client.base_url, username=username)
+    url = "{}/api/courses/{course}/launch-profiles".format(client.base_url, course=course)
 
     headers: Dict[str, str] = client.get_headers()
     cookies: Dict[str, Any] = client.get_cookies()
@@ -29,16 +30,23 @@ def _get_kwargs(
     }
 
 
-def _parse_response(*, client: Client, response: httpx.Response) -> Optional[Union[UserResultJson, str]]:
+def _parse_response(
+    *, client: Client, response: httpx.Response
+) -> Optional[Union[ApiErrorResult, ListLaunchProfilesJson]]:
     if response.status_code == HTTPStatus.FORBIDDEN:
-        response_403 = cast(str, response.json())
+        response_403 = ApiErrorResult.from_dict(response.json())
+
         return response_403
+    if response.status_code == HTTPStatus.NOT_FOUND:
+        response_404 = ApiErrorResult.from_dict(response.json())
+
+        return response_404
     if response.status_code == HTTPStatus.UNAUTHORIZED:
-        response_401 = UserResultJson.from_dict(response.json())
+        response_401 = ApiErrorResult.from_dict(response.json())
 
         return response_401
     if response.status_code == HTTPStatus.OK:
-        response_200 = UserResultJson.from_dict(response.json())
+        response_200 = ListLaunchProfilesJson.from_dict(response.json())
 
         return response_200
     if client.raise_on_unexpected_status:
@@ -47,7 +55,9 @@ def _parse_response(*, client: Client, response: httpx.Response) -> Optional[Uni
         return None
 
 
-def _build_response(*, client: Client, response: httpx.Response) -> Response[Union[UserResultJson, str]]:
+def _build_response(
+    *, client: Client, response: httpx.Response
+) -> Response[Union[ApiErrorResult, ListLaunchProfilesJson]]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -57,25 +67,25 @@ def _build_response(*, client: Client, response: httpx.Response) -> Response[Uni
 
 
 def sync_detailed(
-    username: str,
+    course: str,
     *,
     client: Client,
-) -> Response[Union[UserResultJson, str]]:
-    """Describe a user by username
+) -> Response[Union[ApiErrorResult, ListLaunchProfilesJson]]:
+    """List launch profiles for a course
 
     Args:
-        username (str):
+        course (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[UserResultJson, str]]
+        Response[Union[ApiErrorResult, ListLaunchProfilesJson]]
     """
 
     kwargs = _get_kwargs(
-        username=username,
+        course=course,
         client=client,
     )
 
@@ -88,49 +98,49 @@ def sync_detailed(
 
 
 def sync(
-    username: str,
+    course: str,
     *,
     client: Client,
-) -> Optional[Union[UserResultJson, str]]:
-    """Describe a user by username
+) -> Optional[Union[ApiErrorResult, ListLaunchProfilesJson]]:
+    """List launch profiles for a course
 
     Args:
-        username (str):
+        course (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[UserResultJson, str]
+        Union[ApiErrorResult, ListLaunchProfilesJson]
     """
 
     return sync_detailed(
-        username=username,
+        course=course,
         client=client,
     ).parsed
 
 
 async def asyncio_detailed(
-    username: str,
+    course: str,
     *,
     client: Client,
-) -> Response[Union[UserResultJson, str]]:
-    """Describe a user by username
+) -> Response[Union[ApiErrorResult, ListLaunchProfilesJson]]:
+    """List launch profiles for a course
 
     Args:
-        username (str):
+        course (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[UserResultJson, str]]
+        Response[Union[ApiErrorResult, ListLaunchProfilesJson]]
     """
 
     kwargs = _get_kwargs(
-        username=username,
+        course=course,
         client=client,
     )
 
@@ -141,26 +151,26 @@ async def asyncio_detailed(
 
 
 async def asyncio(
-    username: str,
+    course: str,
     *,
     client: Client,
-) -> Optional[Union[UserResultJson, str]]:
-    """Describe a user by username
+) -> Optional[Union[ApiErrorResult, ListLaunchProfilesJson]]:
+    """List launch profiles for a course
 
     Args:
-        username (str):
+        course (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[UserResultJson, str]
+        Union[ApiErrorResult, ListLaunchProfilesJson]
     """
 
     return (
         await asyncio_detailed(
-            username=username,
+            course=course,
             client=client,
         )
     ).parsed

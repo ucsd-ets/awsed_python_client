@@ -1,10 +1,11 @@
 from http import HTTPStatus
-from typing import Any, Dict, List, Optional, Union, cast
+from typing import Any, Dict, Optional, Union
 
 import httpx
 
 from ... import errors
 from ...client import Client
+from ...models.api_error_result import ApiErrorResult
 from ...models.environment_enrollment_result import EnvironmentEnrollmentResult
 from ...types import Response
 
@@ -31,28 +32,19 @@ def _get_kwargs(
 
 def _parse_response(
     *, client: Client, response: httpx.Response
-) -> Optional[Union[List["EnvironmentEnrollmentResult"], str]]:
+) -> Optional[Union[ApiErrorResult, EnvironmentEnrollmentResult]]:
     if response.status_code == HTTPStatus.FORBIDDEN:
-        response_403 = cast(str, response.json())
+        response_403 = ApiErrorResult.from_dict(response.json())
+
         return response_403
-    if response.status_code == HTTPStatus.UNAUTHORIZED:
-        response_401 = []
-        _response_401 = response.json()
-        for response_401_item_data in _response_401:
-            response_401_item = EnvironmentEnrollmentResult.from_dict(response_401_item_data)
-
-            response_401.append(response_401_item)
-
-        return response_401
     if response.status_code == HTTPStatus.OK:
-        response_200 = []
-        _response_200 = response.json()
-        for response_200_item_data in _response_200:
-            response_200_item = EnvironmentEnrollmentResult.from_dict(response_200_item_data)
-
-            response_200.append(response_200_item)
+        response_200 = EnvironmentEnrollmentResult.from_dict(response.json())
 
         return response_200
+    if response.status_code == HTTPStatus.UNAUTHORIZED:
+        response_401 = ApiErrorResult.from_dict(response.json())
+
+        return response_401
     if client.raise_on_unexpected_status:
         raise errors.UnexpectedStatus(response.status_code, response.content)
     else:
@@ -61,7 +53,7 @@ def _parse_response(
 
 def _build_response(
     *, client: Client, response: httpx.Response
-) -> Response[Union[List["EnvironmentEnrollmentResult"], str]]:
+) -> Response[Union[ApiErrorResult, EnvironmentEnrollmentResult]]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -74,7 +66,7 @@ def sync_detailed(
     slug: str,
     *,
     client: Client,
-) -> Response[Union[List["EnvironmentEnrollmentResult"], str]]:
+) -> Response[Union[ApiErrorResult, EnvironmentEnrollmentResult]]:
     """List enrollments for environment
 
     Args:
@@ -85,7 +77,7 @@ def sync_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[List['EnvironmentEnrollmentResult'], str]]
+        Response[Union[ApiErrorResult, EnvironmentEnrollmentResult]]
     """
 
     kwargs = _get_kwargs(
@@ -105,7 +97,7 @@ def sync(
     slug: str,
     *,
     client: Client,
-) -> Optional[Union[List["EnvironmentEnrollmentResult"], str]]:
+) -> Optional[Union[ApiErrorResult, EnvironmentEnrollmentResult]]:
     """List enrollments for environment
 
     Args:
@@ -116,7 +108,7 @@ def sync(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[List['EnvironmentEnrollmentResult'], str]
+        Union[ApiErrorResult, EnvironmentEnrollmentResult]
     """
 
     return sync_detailed(
@@ -129,7 +121,7 @@ async def asyncio_detailed(
     slug: str,
     *,
     client: Client,
-) -> Response[Union[List["EnvironmentEnrollmentResult"], str]]:
+) -> Response[Union[ApiErrorResult, EnvironmentEnrollmentResult]]:
     """List enrollments for environment
 
     Args:
@@ -140,7 +132,7 @@ async def asyncio_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[List['EnvironmentEnrollmentResult'], str]]
+        Response[Union[ApiErrorResult, EnvironmentEnrollmentResult]]
     """
 
     kwargs = _get_kwargs(
@@ -158,7 +150,7 @@ async def asyncio(
     slug: str,
     *,
     client: Client,
-) -> Optional[Union[List["EnvironmentEnrollmentResult"], str]]:
+) -> Optional[Union[ApiErrorResult, EnvironmentEnrollmentResult]]:
     """List enrollments for environment
 
     Args:
@@ -169,7 +161,7 @@ async def asyncio(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[List['EnvironmentEnrollmentResult'], str]
+        Union[ApiErrorResult, EnvironmentEnrollmentResult]
     """
 
     return (

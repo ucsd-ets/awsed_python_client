@@ -6,30 +6,19 @@ import httpx
 from ... import errors
 from ...client import Client
 from ...models.api_error_result import ApiErrorResult
-from ...models.environment_enrollment_result import EnvironmentEnrollmentResult
-from ...models.list_enrollments_form import ListEnrollmentsForm
-from ...types import UNSET, Response, Unset
+from ...models.pool_account_result import PoolAccountResult
+from ...types import Response
 
 
 def _get_kwargs(
+    pool_name: str,
     *,
     client: Client,
-    form: "ListEnrollmentsForm",
-    username: Union[Unset, None, str] = UNSET,
 ) -> Dict[str, Any]:
-    url = "{}/api/enrollments".format(client.base_url)
+    url = "{}/api/pools/{poolName}".format(client.base_url, poolName=pool_name)
 
     headers: Dict[str, str] = client.get_headers()
     cookies: Dict[str, Any] = client.get_cookies()
-
-    params: Dict[str, Any] = {}
-    json_form = form.to_dict()
-
-    params.update(json_form)
-
-    params["username"] = username
-
-    params = {k: v for k, v in params.items() if v is not UNSET and v is not None}
 
     return {
         "method": "get",
@@ -38,19 +27,16 @@ def _get_kwargs(
         "cookies": cookies,
         "timeout": client.get_timeout(),
         "follow_redirects": client.follow_redirects,
-        "params": params,
     }
 
 
-def _parse_response(
-    *, client: Client, response: httpx.Response
-) -> Optional[Union[ApiErrorResult, EnvironmentEnrollmentResult]]:
+def _parse_response(*, client: Client, response: httpx.Response) -> Optional[Union[ApiErrorResult, PoolAccountResult]]:
     if response.status_code == HTTPStatus.FORBIDDEN:
         response_403 = ApiErrorResult.from_dict(response.json())
 
         return response_403
     if response.status_code == HTTPStatus.OK:
-        response_200 = EnvironmentEnrollmentResult.from_dict(response.json())
+        response_200 = PoolAccountResult.from_dict(response.json())
 
         return response_200
     if response.status_code == HTTPStatus.UNAUTHORIZED:
@@ -63,9 +49,7 @@ def _parse_response(
         return None
 
 
-def _build_response(
-    *, client: Client, response: httpx.Response
-) -> Response[Union[ApiErrorResult, EnvironmentEnrollmentResult]]:
+def _build_response(*, client: Client, response: httpx.Response) -> Response[Union[ApiErrorResult, PoolAccountResult]]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -75,29 +59,26 @@ def _build_response(
 
 
 def sync_detailed(
+    pool_name: str,
     *,
     client: Client,
-    form: "ListEnrollmentsForm",
-    username: Union[Unset, None, str] = UNSET,
-) -> Response[Union[ApiErrorResult, EnvironmentEnrollmentResult]]:
-    """List enrollments for environment
+) -> Response[Union[ApiErrorResult, PoolAccountResult]]:
+    """List assigned user and team accounts for a pool
 
     Args:
-        form (ListEnrollmentsForm):
-        username (Union[Unset, None, str]):
+        pool_name (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[ApiErrorResult, EnvironmentEnrollmentResult]]
+        Response[Union[ApiErrorResult, PoolAccountResult]]
     """
 
     kwargs = _get_kwargs(
+        pool_name=pool_name,
         client=client,
-        form=form,
-        username=username,
     )
 
     response = httpx.request(
@@ -109,56 +90,50 @@ def sync_detailed(
 
 
 def sync(
+    pool_name: str,
     *,
     client: Client,
-    form: "ListEnrollmentsForm",
-    username: Union[Unset, None, str] = UNSET,
-) -> Optional[Union[ApiErrorResult, EnvironmentEnrollmentResult]]:
-    """List enrollments for environment
+) -> Optional[Union[ApiErrorResult, PoolAccountResult]]:
+    """List assigned user and team accounts for a pool
 
     Args:
-        form (ListEnrollmentsForm):
-        username (Union[Unset, None, str]):
+        pool_name (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[ApiErrorResult, EnvironmentEnrollmentResult]
+        Union[ApiErrorResult, PoolAccountResult]
     """
 
     return sync_detailed(
+        pool_name=pool_name,
         client=client,
-        form=form,
-        username=username,
     ).parsed
 
 
 async def asyncio_detailed(
+    pool_name: str,
     *,
     client: Client,
-    form: "ListEnrollmentsForm",
-    username: Union[Unset, None, str] = UNSET,
-) -> Response[Union[ApiErrorResult, EnvironmentEnrollmentResult]]:
-    """List enrollments for environment
+) -> Response[Union[ApiErrorResult, PoolAccountResult]]:
+    """List assigned user and team accounts for a pool
 
     Args:
-        form (ListEnrollmentsForm):
-        username (Union[Unset, None, str]):
+        pool_name (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[ApiErrorResult, EnvironmentEnrollmentResult]]
+        Response[Union[ApiErrorResult, PoolAccountResult]]
     """
 
     kwargs = _get_kwargs(
+        pool_name=pool_name,
         client=client,
-        form=form,
-        username=username,
     )
 
     async with httpx.AsyncClient(verify=client.verify_ssl) as _client:
@@ -168,29 +143,26 @@ async def asyncio_detailed(
 
 
 async def asyncio(
+    pool_name: str,
     *,
     client: Client,
-    form: "ListEnrollmentsForm",
-    username: Union[Unset, None, str] = UNSET,
-) -> Optional[Union[ApiErrorResult, EnvironmentEnrollmentResult]]:
-    """List enrollments for environment
+) -> Optional[Union[ApiErrorResult, PoolAccountResult]]:
+    """List assigned user and team accounts for a pool
 
     Args:
-        form (ListEnrollmentsForm):
-        username (Union[Unset, None, str]):
+        pool_name (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[ApiErrorResult, EnvironmentEnrollmentResult]
+        Union[ApiErrorResult, PoolAccountResult]
     """
 
     return (
         await asyncio_detailed(
+            pool_name=pool_name,
             client=client,
-            form=form,
-            username=username,
         )
     ).parsed

@@ -1,52 +1,57 @@
-from typing import Any, Dict, List, Type, TypeVar, Union
+from typing import TYPE_CHECKING, Any, Dict, List, Type, TypeVar, Union
 
 import attr
 
 from ..types import UNSET, Unset
 
-T = TypeVar("T", bound="EnrollmentJson")
+if TYPE_CHECKING:
+    from ..models.api_error import ApiError
+
+
+T = TypeVar("T", bound="ApiErrorResult")
 
 
 @attr.s(auto_attribs=True)
-class EnrollmentJson:
+class ApiErrorResult:
     """
     Attributes:
-        username (Union[Unset, str]):
-        course (Union[Unset, str]):
+        error (Union[Unset, ApiError]):
     """
 
-    username: Union[Unset, str] = UNSET
-    course: Union[Unset, str] = UNSET
+    error: Union[Unset, "ApiError"] = UNSET
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
-        username = self.username
-        course = self.course
+        error: Union[Unset, Dict[str, Any]] = UNSET
+        if not isinstance(self.error, Unset):
+            error = self.error.to_dict()
 
         field_dict: Dict[str, Any] = {}
         field_dict.update(self.additional_properties)
         field_dict.update({})
-        if username is not UNSET:
-            field_dict["username"] = username
-        if course is not UNSET:
-            field_dict["course"] = course
+        if error is not UNSET:
+            field_dict["error"] = error
 
         return field_dict
 
     @classmethod
     def from_dict(cls: Type[T], src_dict: Dict[str, Any]) -> T:
+        from ..models.api_error import ApiError
+
         d = src_dict.copy()
-        username = d.pop("username", UNSET)
+        _error = d.pop("error", UNSET)
+        error: Union[Unset, ApiError]
+        if isinstance(_error, Unset):
+            error = UNSET
+        else:
+            error = ApiError.from_dict(_error)
 
-        course = d.pop("course", UNSET)
-
-        enrollment_json = cls(
-            username=username,
-            course=course,
+        api_error_result = cls(
+            error=error,
         )
 
-        enrollment_json.additional_properties = d
-        return enrollment_json
+        api_error_result.additional_properties = d
+        return api_error_result
 
     @property
     def additional_keys(self) -> List[str]:

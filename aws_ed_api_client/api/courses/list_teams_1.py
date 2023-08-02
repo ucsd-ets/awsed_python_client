@@ -1,10 +1,11 @@
 from http import HTTPStatus
-from typing import Any, Dict, Optional, Union, cast
+from typing import Any, Dict, Optional, Union
 
 import httpx
 
 from ... import errors
 from ...client import Client
+from ...models.api_error_result import ApiErrorResult
 from ...models.teams_result import TeamsResult
 from ...types import Response
 
@@ -29,29 +30,30 @@ def _get_kwargs(
     }
 
 
-def _parse_response(*, client: Client, response: httpx.Response) -> Optional[Union[TeamsResult, str]]:
+def _parse_response(*, client: Client, response: httpx.Response) -> Optional[Union[ApiErrorResult, TeamsResult]]:
     if response.status_code == HTTPStatus.FORBIDDEN:
-        response_403 = cast(str, response.json())
+        response_403 = ApiErrorResult.from_dict(response.json())
+
         return response_403
-    if response.status_code == HTTPStatus.NOT_FOUND:
-        response_404 = TeamsResult.from_dict(response.json())
-
-        return response_404
-    if response.status_code == HTTPStatus.UNAUTHORIZED:
-        response_401 = TeamsResult.from_dict(response.json())
-
-        return response_401
     if response.status_code == HTTPStatus.OK:
         response_200 = TeamsResult.from_dict(response.json())
 
         return response_200
+    if response.status_code == HTTPStatus.NOT_FOUND:
+        response_404 = ApiErrorResult.from_dict(response.json())
+
+        return response_404
+    if response.status_code == HTTPStatus.UNAUTHORIZED:
+        response_401 = ApiErrorResult.from_dict(response.json())
+
+        return response_401
     if client.raise_on_unexpected_status:
         raise errors.UnexpectedStatus(response.status_code, response.content)
     else:
         return None
 
 
-def _build_response(*, client: Client, response: httpx.Response) -> Response[Union[TeamsResult, str]]:
+def _build_response(*, client: Client, response: httpx.Response) -> Response[Union[ApiErrorResult, TeamsResult]]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -64,7 +66,7 @@ def sync_detailed(
     course: str,
     *,
     client: Client,
-) -> Response[Union[TeamsResult, str]]:
+) -> Response[Union[ApiErrorResult, TeamsResult]]:
     """List Teams
 
     Args:
@@ -75,7 +77,7 @@ def sync_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[TeamsResult, str]]
+        Response[Union[ApiErrorResult, TeamsResult]]
     """
 
     kwargs = _get_kwargs(
@@ -95,7 +97,7 @@ def sync(
     course: str,
     *,
     client: Client,
-) -> Optional[Union[TeamsResult, str]]:
+) -> Optional[Union[ApiErrorResult, TeamsResult]]:
     """List Teams
 
     Args:
@@ -106,7 +108,7 @@ def sync(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[TeamsResult, str]
+        Union[ApiErrorResult, TeamsResult]
     """
 
     return sync_detailed(
@@ -119,7 +121,7 @@ async def asyncio_detailed(
     course: str,
     *,
     client: Client,
-) -> Response[Union[TeamsResult, str]]:
+) -> Response[Union[ApiErrorResult, TeamsResult]]:
     """List Teams
 
     Args:
@@ -130,7 +132,7 @@ async def asyncio_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[TeamsResult, str]]
+        Response[Union[ApiErrorResult, TeamsResult]]
     """
 
     kwargs = _get_kwargs(
@@ -148,7 +150,7 @@ async def asyncio(
     course: str,
     *,
     client: Client,
-) -> Optional[Union[TeamsResult, str]]:
+) -> Optional[Union[ApiErrorResult, TeamsResult]]:
     """List Teams
 
     Args:
@@ -159,7 +161,7 @@ async def asyncio(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[TeamsResult, str]
+        Union[ApiErrorResult, TeamsResult]
     """
 
     return (

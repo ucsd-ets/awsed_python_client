@@ -5,41 +5,54 @@ import httpx
 
 from ... import errors
 from ...client import Client
-from ...models.environment_json import EnvironmentJson
+from ...models.api_error_result import ApiErrorResult
+from ...models.launch_profile_request_json import LaunchProfileRequestJson
 from ...types import Response
 
 
 def _get_kwargs(
-    slug: str,
+    course: str,
     *,
     client: Client,
+    json_body: LaunchProfileRequestJson,
 ) -> Dict[str, Any]:
-    url = "{}/api/environments/{slug}".format(client.base_url, slug=slug)
+    url = "{}/api/courses/{course}/launch-profiles".format(client.base_url, course=course)
 
     headers: Dict[str, str] = client.get_headers()
     cookies: Dict[str, Any] = client.get_cookies()
 
+    json_json_body = json_body.to_dict()
+
     return {
-        "method": "get",
+        "method": "post",
         "url": url,
         "headers": headers,
         "cookies": cookies,
         "timeout": client.get_timeout(),
         "follow_redirects": client.follow_redirects,
+        "json": json_json_body,
     }
 
 
-def _parse_response(*, client: Client, response: httpx.Response) -> Optional[Union[EnvironmentJson, str]]:
+def _parse_response(*, client: Client, response: httpx.Response) -> Optional[Union[Any, ApiErrorResult]]:
     if response.status_code == HTTPStatus.FORBIDDEN:
-        response_403 = cast(str, response.json())
+        response_403 = ApiErrorResult.from_dict(response.json())
+
         return response_403
+    if response.status_code == HTTPStatus.INTERNAL_SERVER_ERROR:
+        response_500 = ApiErrorResult.from_dict(response.json())
+
+        return response_500
     if response.status_code == HTTPStatus.UNAUTHORIZED:
-        response_401 = EnvironmentJson.from_dict(response.json())
+        response_401 = ApiErrorResult.from_dict(response.json())
 
         return response_401
-    if response.status_code == HTTPStatus.OK:
-        response_200 = EnvironmentJson.from_dict(response.json())
+    if response.status_code == HTTPStatus.CONFLICT:
+        response_409 = ApiErrorResult.from_dict(response.json())
 
+        return response_409
+    if response.status_code == HTTPStatus.OK:
+        response_200 = cast(Any, None)
         return response_200
     if client.raise_on_unexpected_status:
         raise errors.UnexpectedStatus(response.status_code, response.content)
@@ -47,7 +60,7 @@ def _parse_response(*, client: Client, response: httpx.Response) -> Optional[Uni
         return None
 
 
-def _build_response(*, client: Client, response: httpx.Response) -> Response[Union[EnvironmentJson, str]]:
+def _build_response(*, client: Client, response: httpx.Response) -> Response[Union[Any, ApiErrorResult]]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -57,26 +70,29 @@ def _build_response(*, client: Client, response: httpx.Response) -> Response[Uni
 
 
 def sync_detailed(
-    slug: str,
+    course: str,
     *,
     client: Client,
-) -> Response[Union[EnvironmentJson, str]]:
-    """List enrollments for environment
+    json_body: LaunchProfileRequestJson,
+) -> Response[Union[Any, ApiErrorResult]]:
+    """Create a launch profile for a course
 
     Args:
-        slug (str):
+        course (str):
+        json_body (LaunchProfileRequestJson):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[EnvironmentJson, str]]
+        Response[Union[Any, ApiErrorResult]]
     """
 
     kwargs = _get_kwargs(
-        slug=slug,
+        course=course,
         client=client,
+        json_body=json_body,
     )
 
     response = httpx.request(
@@ -88,50 +104,56 @@ def sync_detailed(
 
 
 def sync(
-    slug: str,
+    course: str,
     *,
     client: Client,
-) -> Optional[Union[EnvironmentJson, str]]:
-    """List enrollments for environment
+    json_body: LaunchProfileRequestJson,
+) -> Optional[Union[Any, ApiErrorResult]]:
+    """Create a launch profile for a course
 
     Args:
-        slug (str):
+        course (str):
+        json_body (LaunchProfileRequestJson):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[EnvironmentJson, str]
+        Union[Any, ApiErrorResult]
     """
 
     return sync_detailed(
-        slug=slug,
+        course=course,
         client=client,
+        json_body=json_body,
     ).parsed
 
 
 async def asyncio_detailed(
-    slug: str,
+    course: str,
     *,
     client: Client,
-) -> Response[Union[EnvironmentJson, str]]:
-    """List enrollments for environment
+    json_body: LaunchProfileRequestJson,
+) -> Response[Union[Any, ApiErrorResult]]:
+    """Create a launch profile for a course
 
     Args:
-        slug (str):
+        course (str):
+        json_body (LaunchProfileRequestJson):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[EnvironmentJson, str]]
+        Response[Union[Any, ApiErrorResult]]
     """
 
     kwargs = _get_kwargs(
-        slug=slug,
+        course=course,
         client=client,
+        json_body=json_body,
     )
 
     async with httpx.AsyncClient(verify=client.verify_ssl) as _client:
@@ -141,26 +163,29 @@ async def asyncio_detailed(
 
 
 async def asyncio(
-    slug: str,
+    course: str,
     *,
     client: Client,
-) -> Optional[Union[EnvironmentJson, str]]:
-    """List enrollments for environment
+    json_body: LaunchProfileRequestJson,
+) -> Optional[Union[Any, ApiErrorResult]]:
+    """Create a launch profile for a course
 
     Args:
-        slug (str):
+        course (str):
+        json_body (LaunchProfileRequestJson):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[EnvironmentJson, str]
+        Union[Any, ApiErrorResult]
     """
 
     return (
         await asyncio_detailed(
-            slug=slug,
+            course=course,
             client=client,
+            json_body=json_body,
         )
     ).parsed

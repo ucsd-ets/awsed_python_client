@@ -1,10 +1,11 @@
 from http import HTTPStatus
-from typing import Any, Dict, Optional, Union, cast
+from typing import Any, Dict, Optional, Union
 
 import httpx
 
 from ... import errors
 from ...client import Client
+from ...models.api_error_result import ApiErrorResult
 from ...models.pools_result import PoolsResult
 from ...types import Response
 
@@ -29,25 +30,26 @@ def _get_kwargs(
     }
 
 
-def _parse_response(*, client: Client, response: httpx.Response) -> Optional[Union[PoolsResult, str]]:
+def _parse_response(*, client: Client, response: httpx.Response) -> Optional[Union[ApiErrorResult, PoolsResult]]:
     if response.status_code == HTTPStatus.FORBIDDEN:
-        response_403 = cast(str, response.json())
-        return response_403
-    if response.status_code == HTTPStatus.UNAUTHORIZED:
-        response_401 = PoolsResult.from_dict(response.json())
+        response_403 = ApiErrorResult.from_dict(response.json())
 
-        return response_401
+        return response_403
     if response.status_code == HTTPStatus.OK:
         response_200 = PoolsResult.from_dict(response.json())
 
         return response_200
+    if response.status_code == HTTPStatus.UNAUTHORIZED:
+        response_401 = ApiErrorResult.from_dict(response.json())
+
+        return response_401
     if client.raise_on_unexpected_status:
         raise errors.UnexpectedStatus(response.status_code, response.content)
     else:
         return None
 
 
-def _build_response(*, client: Client, response: httpx.Response) -> Response[Union[PoolsResult, str]]:
+def _build_response(*, client: Client, response: httpx.Response) -> Response[Union[ApiErrorResult, PoolsResult]]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -60,7 +62,7 @@ def sync_detailed(
     pool_root_name: str,
     *,
     client: Client,
-) -> Response[Union[PoolsResult, str]]:
+) -> Response[Union[ApiErrorResult, PoolsResult]]:
     """List pools configured under a pool root
 
     Args:
@@ -71,7 +73,7 @@ def sync_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[PoolsResult, str]]
+        Response[Union[ApiErrorResult, PoolsResult]]
     """
 
     kwargs = _get_kwargs(
@@ -91,7 +93,7 @@ def sync(
     pool_root_name: str,
     *,
     client: Client,
-) -> Optional[Union[PoolsResult, str]]:
+) -> Optional[Union[ApiErrorResult, PoolsResult]]:
     """List pools configured under a pool root
 
     Args:
@@ -102,7 +104,7 @@ def sync(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[PoolsResult, str]
+        Union[ApiErrorResult, PoolsResult]
     """
 
     return sync_detailed(
@@ -115,7 +117,7 @@ async def asyncio_detailed(
     pool_root_name: str,
     *,
     client: Client,
-) -> Response[Union[PoolsResult, str]]:
+) -> Response[Union[ApiErrorResult, PoolsResult]]:
     """List pools configured under a pool root
 
     Args:
@@ -126,7 +128,7 @@ async def asyncio_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[PoolsResult, str]]
+        Response[Union[ApiErrorResult, PoolsResult]]
     """
 
     kwargs = _get_kwargs(
@@ -144,7 +146,7 @@ async def asyncio(
     pool_root_name: str,
     *,
     client: Client,
-) -> Optional[Union[PoolsResult, str]]:
+) -> Optional[Union[ApiErrorResult, PoolsResult]]:
     """List pools configured under a pool root
 
     Args:
@@ -155,7 +157,7 @@ async def asyncio(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[PoolsResult, str]
+        Union[ApiErrorResult, PoolsResult]
     """
 
     return (

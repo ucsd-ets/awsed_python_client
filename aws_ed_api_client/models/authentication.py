@@ -11,54 +11,54 @@ T = TypeVar("T", bound="Authentication")
 class Authentication:
     """
     Attributes:
-        ta (Union[Unset, bool]):
-        username (Union[Unset, str]):
         admin (Union[Unset, bool]):
+        username (Union[Unset, str]):
         student (Union[Unset, bool]):
+        ta (Union[Unset, bool]):
     """
 
-    ta: Union[Unset, bool] = UNSET
-    username: Union[Unset, str] = UNSET
     admin: Union[Unset, bool] = UNSET
+    username: Union[Unset, str] = UNSET
     student: Union[Unset, bool] = UNSET
+    ta: Union[Unset, bool] = UNSET
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
-        ta = self.ta
-        username = self.username
         admin = self.admin
+        username = self.username
         student = self.student
+        ta = self.ta
 
         field_dict: Dict[str, Any] = {}
         field_dict.update(self.additional_properties)
         field_dict.update({})
-        if ta is not UNSET:
-            field_dict["ta"] = ta
-        if username is not UNSET:
-            field_dict["username"] = username
         if admin is not UNSET:
             field_dict["admin"] = admin
+        if username is not UNSET:
+            field_dict["username"] = username
         if student is not UNSET:
             field_dict["student"] = student
+        if ta is not UNSET:
+            field_dict["ta"] = ta
 
         return field_dict
 
     @classmethod
     def from_dict(cls: Type[T], src_dict: Dict[str, Any]) -> T:
         d = src_dict.copy()
-        ta = d.pop("ta", UNSET)
+        admin = d.pop("admin", UNSET)
 
         username = d.pop("username", UNSET)
 
-        admin = d.pop("admin", UNSET)
-
         student = d.pop("student", UNSET)
 
+        ta = d.pop("ta", UNSET)
+
         authentication = cls(
-            ta=ta,
-            username=username,
             admin=admin,
+            username=username,
             student=student,
+            ta=ta,
         )
 
         authentication.additional_properties = d

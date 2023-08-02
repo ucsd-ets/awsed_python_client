@@ -30,6 +30,7 @@ class CourseResult:
         course_number (Union[Unset, str]):
         instructor (Union[Unset, str]):
         instructor_email (Union[Unset, str]):
+        course_name (Union[Unset, str]):
     """
 
     tags: Union[Unset, List[str]] = UNSET
@@ -45,6 +46,7 @@ class CourseResult:
     course_number: Union[Unset, str] = UNSET
     instructor: Union[Unset, str] = UNSET
     instructor_email: Union[Unset, str] = UNSET
+    course_name: Union[Unset, str] = UNSET
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
@@ -80,6 +82,7 @@ class CourseResult:
         course_number = self.course_number
         instructor = self.instructor
         instructor_email = self.instructor_email
+        course_name = self.course_name
 
         field_dict: Dict[str, Any] = {}
         field_dict.update(self.additional_properties)
@@ -110,6 +113,8 @@ class CourseResult:
             field_dict["instructor"] = instructor
         if instructor_email is not UNSET:
             field_dict["instructorEmail"] = instructor_email
+        if course_name is not UNSET:
+            field_dict["courseName"] = course_name
 
         return field_dict
 
@@ -166,6 +171,8 @@ class CourseResult:
 
         instructor_email = d.pop("instructorEmail", UNSET)
 
+        course_name = d.pop("courseName", UNSET)
+
         course_result = cls(
             tags=tags,
             enrollments=enrollments,
@@ -180,6 +187,7 @@ class CourseResult:
             course_number=course_number,
             instructor=instructor,
             instructor_email=instructor_email,
+            course_name=course_name,
         )
 
         course_result.additional_properties = d

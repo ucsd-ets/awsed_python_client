@@ -1,10 +1,11 @@
 from http import HTTPStatus
-from typing import Any, Dict, Optional, cast
+from typing import Any, Dict, Optional, Union, cast
 
 import httpx
 
 from ... import errors
 from ...client import Client
+from ...models.api_error_result import ApiErrorResult
 from ...models.modify_course_environment_request_body import ModifyCourseEnvironmentRequestBody
 from ...types import Response
 
@@ -36,15 +37,25 @@ def _get_kwargs(
     }
 
 
-def _parse_response(*, client: Client, response: httpx.Response) -> Optional[str]:
+def _parse_response(*, client: Client, response: httpx.Response) -> Optional[Union[Any, ApiErrorResult]]:
     if response.status_code == HTTPStatus.FORBIDDEN:
-        response_403 = cast(str, response.json())
+        response_403 = ApiErrorResult.from_dict(response.json())
+
         return response_403
     if response.status_code == HTTPStatus.INTERNAL_SERVER_ERROR:
-        response_500 = cast(str, response.json())
+        response_500 = ApiErrorResult.from_dict(response.json())
+
         return response_500
+    if response.status_code == HTTPStatus.UNAUTHORIZED:
+        response_401 = ApiErrorResult.from_dict(response.json())
+
+        return response_401
+    if response.status_code == HTTPStatus.CONFLICT:
+        response_409 = ApiErrorResult.from_dict(response.json())
+
+        return response_409
     if response.status_code == HTTPStatus.OK:
-        response_200 = cast(str, response.json())
+        response_200 = cast(Any, None)
         return response_200
     if client.raise_on_unexpected_status:
         raise errors.UnexpectedStatus(response.status_code, response.content)
@@ -52,7 +63,7 @@ def _parse_response(*, client: Client, response: httpx.Response) -> Optional[str
         return None
 
 
-def _build_response(*, client: Client, response: httpx.Response) -> Response[str]:
+def _build_response(*, client: Client, response: httpx.Response) -> Response[Union[Any, ApiErrorResult]]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -67,7 +78,7 @@ def sync_detailed(
     *,
     client: Client,
     json_body: ModifyCourseEnvironmentRequestBody,
-) -> Response[str]:
+) -> Response[Union[Any, ApiErrorResult]]:
     """Update a course environment
 
     Args:
@@ -80,7 +91,7 @@ def sync_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[str]
+        Response[Union[Any, ApiErrorResult]]
     """
 
     kwargs = _get_kwargs(
@@ -104,7 +115,7 @@ def sync(
     *,
     client: Client,
     json_body: ModifyCourseEnvironmentRequestBody,
-) -> Optional[str]:
+) -> Optional[Union[Any, ApiErrorResult]]:
     """Update a course environment
 
     Args:
@@ -117,7 +128,7 @@ def sync(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        str
+        Union[Any, ApiErrorResult]
     """
 
     return sync_detailed(
@@ -134,7 +145,7 @@ async def asyncio_detailed(
     *,
     client: Client,
     json_body: ModifyCourseEnvironmentRequestBody,
-) -> Response[str]:
+) -> Response[Union[Any, ApiErrorResult]]:
     """Update a course environment
 
     Args:
@@ -147,7 +158,7 @@ async def asyncio_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[str]
+        Response[Union[Any, ApiErrorResult]]
     """
 
     kwargs = _get_kwargs(
@@ -169,7 +180,7 @@ async def asyncio(
     *,
     client: Client,
     json_body: ModifyCourseEnvironmentRequestBody,
-) -> Optional[str]:
+) -> Optional[Union[Any, ApiErrorResult]]:
     """Update a course environment
 
     Args:
@@ -182,7 +193,7 @@ async def asyncio(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        str
+        Union[Any, ApiErrorResult]
     """
 
     return (

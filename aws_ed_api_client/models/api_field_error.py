@@ -4,32 +4,32 @@ import attr
 
 from ..types import UNSET, Unset
 
-T = TypeVar("T", bound="Team2Json")
+T = TypeVar("T", bound="ApiFieldError")
 
 
 @attr.s(auto_attribs=True)
-class Team2Json:
+class ApiFieldError:
     """
     Attributes:
         name (Union[Unset, str]):
-        gid (Union[Unset, int]):
+        message (Union[Unset, str]):
     """
 
     name: Union[Unset, str] = UNSET
-    gid: Union[Unset, int] = UNSET
+    message: Union[Unset, str] = UNSET
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
         name = self.name
-        gid = self.gid
+        message = self.message
 
         field_dict: Dict[str, Any] = {}
         field_dict.update(self.additional_properties)
         field_dict.update({})
         if name is not UNSET:
             field_dict["name"] = name
-        if gid is not UNSET:
-            field_dict["gid"] = gid
+        if message is not UNSET:
+            field_dict["message"] = message
 
         return field_dict
 
@@ -38,15 +38,15 @@ class Team2Json:
         d = src_dict.copy()
         name = d.pop("name", UNSET)
 
-        gid = d.pop("gid", UNSET)
+        message = d.pop("message", UNSET)
 
-        team_2_json = cls(
+        api_field_error = cls(
             name=name,
-            gid=gid,
+            message=message,
         )
 
-        team_2_json.additional_properties = d
-        return team_2_json
+        api_field_error.additional_properties = d
+        return api_field_error
 
     @property
     def additional_keys(self) -> List[str]:

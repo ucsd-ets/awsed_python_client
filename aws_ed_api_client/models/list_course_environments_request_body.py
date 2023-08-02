@@ -18,18 +18,12 @@ class ListCourseEnvironmentsRequestBody:
         status (Union[Unset, str]):
         subject (Union[Unset, str]):
         term (Union[Unset, str]):
-        status_filter (Union[Unset, str]):
-        subject_filter (Union[Unset, str]):
-        term_filter (Union[Unset, str]):
         authentication (Union[Unset, Authentication]):
     """
 
     status: Union[Unset, str] = UNSET
     subject: Union[Unset, str] = UNSET
     term: Union[Unset, str] = UNSET
-    status_filter: Union[Unset, str] = UNSET
-    subject_filter: Union[Unset, str] = UNSET
-    term_filter: Union[Unset, str] = UNSET
     authentication: Union[Unset, "Authentication"] = UNSET
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
@@ -37,9 +31,6 @@ class ListCourseEnvironmentsRequestBody:
         status = self.status
         subject = self.subject
         term = self.term
-        status_filter = self.status_filter
-        subject_filter = self.subject_filter
-        term_filter = self.term_filter
         authentication: Union[Unset, Dict[str, Any]] = UNSET
         if not isinstance(self.authentication, Unset):
             authentication = self.authentication.to_dict()
@@ -53,12 +44,6 @@ class ListCourseEnvironmentsRequestBody:
             field_dict["subject"] = subject
         if term is not UNSET:
             field_dict["term"] = term
-        if status_filter is not UNSET:
-            field_dict["statusFilter"] = status_filter
-        if subject_filter is not UNSET:
-            field_dict["subjectFilter"] = subject_filter
-        if term_filter is not UNSET:
-            field_dict["termFilter"] = term_filter
         if authentication is not UNSET:
             field_dict["authentication"] = authentication
 
@@ -75,12 +60,6 @@ class ListCourseEnvironmentsRequestBody:
 
         term = d.pop("term", UNSET)
 
-        status_filter = d.pop("statusFilter", UNSET)
-
-        subject_filter = d.pop("subjectFilter", UNSET)
-
-        term_filter = d.pop("termFilter", UNSET)
-
         _authentication = d.pop("authentication", UNSET)
         authentication: Union[Unset, Authentication]
         if isinstance(_authentication, Unset):
@@ -92,9 +71,6 @@ class ListCourseEnvironmentsRequestBody:
             status=status,
             subject=subject,
             term=term,
-            status_filter=status_filter,
-            subject_filter=subject_filter,
-            term_filter=term_filter,
             authentication=authentication,
         )
 
