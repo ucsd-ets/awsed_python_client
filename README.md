@@ -1,6 +1,10 @@
 # aws-ed-api-client
 A client library for accessing AWSEd API. Ensure you do the following steps below if you're going to update the existing client.
 
+# How to Download/Use the Client
+
+Run `python3 -m pip install git+https://github.com/ucsd-ets/awsed_python_client.git@master`
+
 # How to Generate/Update Client
 
 Delete the dir: `aws_ed_api_client`

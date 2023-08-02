@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "awsedapiclient"
-version = "2023.3.1-RC6"
+version = "2023.3.1"
 description = "A client library for accessing AWSEd API"
 
 authors = []
