@@ -5,6 +5,8 @@ A client library for accessing AWSEd API. Ensure you do the following steps belo
 
 Run `python3 -m pip install git+https://github.com/ucsd-ets/awsed_python_client.git@master`
 
+Run `python3 tests/test.py` to verify it was installed correctly.
+
 # How to Generate/Update Client
 
 Delete the dir: `aws_ed_api_client`
