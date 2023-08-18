@@ -10,6 +10,7 @@ dist/
 # Environments
 .env
 .venv
+env 
 
 # mypy
 .mypy_cache/
