@@ -1,5 +1,5 @@
 # aws-ed-api-client
-A client library for accessing AWSEd API. Ensure you do the following steps below if you're going to update the existing client.
+A client library for accessing AWSEd API. Ensure you do the following steps below if you're going to update the existing client..
 
 # How to Download/Use the Client
 
