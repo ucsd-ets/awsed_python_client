@@ -158,6 +158,10 @@ class CourseResult:
     courseName: str
 
 @dataclass
+class CourseJson:
+    courseId: str
+
+@dataclass
 class TeamResult:
     teamName: str
     sanitizedTeamName: str
@@ -223,7 +227,7 @@ class ListEnrollmentsForm:
 
 @dataclass
 class ListCoursesResultJson:
-    courses: List[CourseResult]
+    courses: List[CourseJson]
 
 @dataclass
 class LaunchProfileJson:
@@ -241,8 +245,6 @@ class CourseEnvironmentResult:
     environment: str
     status: str
     notes: str
-    courseName: str
-    environmentSlug: str
 
 @dataclass
 class Authentication:

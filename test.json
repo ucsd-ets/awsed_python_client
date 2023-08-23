@@ -1,0 +1,63 @@
+{
+    "teams": [
+        {
+            "teamName": "TeamA",
+            "sanitizedTeamName": "team_a",
+            "uniqueName": "team_a_123",
+            "gid": 123,
+            "members": [
+                {
+                    "username": "user1",
+                    "firstName": "John",
+                    "lastName": "Doe",
+                    "uid": 456,
+                    "role": "student"
+                }
+            ],
+            "course": {
+                "tags": [
+                    "tag1",
+                    "tag2"
+                ],
+                "enrollments": [
+                    {
+                        "username": "user1",
+                        "firstName": "John",
+                        "lastName": "Doe",
+                        "uid": 456,
+                        "role": "student"
+                    }
+                ],
+                "courseId": "CS101",
+                "pool": {
+                    "name": "pool1",
+                    "poolRootName": "root_pool1",
+                    "rule": "rule1",
+                    "ou": "ou1",
+                    "courseName": "Computer Science",
+                    "mode": "mode1"
+                },
+                "active": True,
+                "grader": {
+                    "username": "grader1",
+                    "firstName": "Alice",
+                    "lastName": "Smith",
+                    "uid": 789,
+                    "role": "instructor"
+                },
+                "fileSystem": {
+                    "identifier": "fs1",
+                    "server": "server1",
+                    "path": "/path/to/files"
+                },
+                "snowTicket": "ticket123",
+                "quarter": "Fall",
+                "subject": "Computer Science",
+                "courseNumber": "101",
+                "instructor": "instructor1",
+                "instructorEmail": "instructor1@example.com",
+                "courseName": "Intro to CS"
+            }
+        }
+    ]
+}
