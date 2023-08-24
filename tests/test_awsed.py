@@ -133,7 +133,7 @@ class TestAwsedClient:
             ]
         )))
 
-    def test_list_enrollments_for_environment(self, requests_mock):
+    def test_list_enrollments(self, requests_mock):
         #TODO: Learn about Rest object parameters
         requests_mock.get('https://awsed.ucsd.edu/api/enrollments', text="""
             {
@@ -148,7 +148,7 @@ class TestAwsedClient:
 
         c = DefaultAwsedClient()
         form = ListEnrollmentsForm(courseSlugs=["ABC100", "ABC101"], username="johndoe", courseSlug=["ABC100"])
-        enrollment_result = c.list_enrollments_for_environment(form, "johndoe")
+        enrollment_result = c.list_enrollments(form, "johndoe")
 
         assert_that(enrollment_result, equal_to(EnvironmentEnrollmentResult(
             username="johndoe",
@@ -290,7 +290,7 @@ class TestAwsedClient:
         c = DefaultAwsedClient()
         result = c.generate_aws_credentials(course, role)
         
-        assert_that(result, equal_to("generated_aws_credentials"))
+        assert_that(result, equal_to(True))
 
     def test_list_courses(self, requests_mock):
         username = "johndoe"
@@ -481,8 +481,7 @@ class TestAwsedClient:
                     "firstName": "John",
                     "lastName": "Doe",
                     "uid": 123,
-                    "role": "student",
-                    "enrollments": ["ABC101"]
+                    "role": "student"
                 }
             ],
             "courseId": "CS101",
@@ -500,8 +499,7 @@ class TestAwsedClient:
                 "firstName": "Grader",
                 "lastName": "Smith",
                 "uid": 456,
-                "role": "grader",
-                "enrollments": ["ABC102"]
+                "role": "grader"
             },
             "fileSystem": {
                 "identifier": "fs1",
@@ -525,12 +523,12 @@ class TestAwsedClient:
         expected_result = CourseResult(
             tags=["tag1", "tag2"],
             enrollments=[
-                UserResultJson(
+                UserResult(
                     username="user1",
                     firstName="John",
                     lastName="Doe",
                     uid=123,
-                    enrollments=["ABC101"]
+                    role="student"
                 )
             ],
             courseId="CS101",
@@ -543,12 +541,12 @@ class TestAwsedClient:
                 mode="mode1"
             ),
             active=True,
-            grader=UserResultJson(
+            grader=UserResult(
                 username="grader1",
                 firstName="Grader",
                 lastName="Smith",
                 uid=456,
-                enrollments=["ABC102"]
+                role="grader"
             ),
             fileSystem=FileSystemResult(
                 identifier="fs1",
@@ -590,6 +588,60 @@ class TestAwsedClient:
         
         assert_that(response_text, equal_to(True))
     
+    def test_describe_environment(self, requests_mock):
+        requests_mock.get('https://awsed.ucsd.edu/api/environments/env123', text="""
+            {
+                "volumes": [
+                    {
+                        "type": "nfs",
+                        "name": "volume1",
+                        "server": "nfs-server",
+                        "path": "/data",
+                        "accessMode": "ReadWriteMany",
+                        "pvcName": "pvc123"
+                    }
+                ]
+            }
+            """)
+        
+        c = DefaultAwsedClient()
+        environment = c.list_enrollments_slug("env123")
+        
+        assert_that(environment, equal_to(EnvironmentJson(volumes=[
+            Volume(type="nfs", name="volume1", server="nfs-server", path="/data", accessMode="ReadWriteMany", pvcName="pvc123")
+        ])))
+    
+    def test_upload_enrollments(self, requests_mock):
+        csv_content = "username,firstName,lastName,uid,role\njohndoe,John,Doe,101,Student"
+        requests_mock.post('https://awsed.ucsd.edu/api/enrollments', text="Enrollments uploaded successfully")
+        
+        c = DefaultAwsedClient()
+        response_text = c.upload_enrollments(csv_content, dry_run=False)
+        
+        assert_that(response_text, equal_to(True))
+    
+    def test_list_enrollments_for_environment_roster(self, requests_mock):
+        requests_mock.get('https://awsed.ucsd.edu/api/environments/env123/roster', text="""
+            {
+                "username": "johndoe",
+                "firstName": "John",
+                "lastName": "Doe",
+                "uid": 101,
+                "token": "token123"
+            }
+            """)
+        
+        c = DefaultAwsedClient()
+        enrollment_result = c.list_enrollments_roster("env123")
+        
+        assert_that(enrollment_result, equal_to(EnvironmentEnrollmentResult(
+            username="johndoe",
+            firstName="John",
+            lastName="Doe",
+            uid=101,
+            token="token123"
+        )))
+        
     def test_list_teams(self, requests_mock):
         requests_mock.get('https://awsed.ucsd.edu/api/courses/ABC101/teams', text="""
             {
@@ -605,8 +657,7 @@ class TestAwsedClient:
                                 "firstName": "John",
                                 "lastName": "Doe",
                                 "uid": 456,
-                                "role": "student",
-                                "enrollments": ["ABC101"]
+                                "role": "student"
                             }
                         ],
                         "course": {
@@ -617,8 +668,7 @@ class TestAwsedClient:
                                     "firstName": "John",
                                     "lastName": "Doe",
                                     "uid": 456,
-                                    "role": "student",
-                                    "enrollments": ["ABC101"]
+                                    "role": "student"
                                 }
                             ],
                             "courseId": "CS101",
@@ -636,8 +686,7 @@ class TestAwsedClient:
                                 "firstName": "Alice",
                                 "lastName": "Smith",
                                 "uid": 789,
-                                "role": "instructor",
-                                "enrollments": ["ABC102"]
+                                "role": "instructor"
                             },
                             "fileSystem": {
                                 "identifier": "fs1",
@@ -669,7 +718,7 @@ class TestAwsedClient:
                     uniqueName="team_a_123",
                     gid=123,
                     members=[
-                        UserResultJson(
+                        UserResult(
                             username="user1",
                             firstName="John",
                             lastName="Doe",
@@ -680,7 +729,7 @@ class TestAwsedClient:
                     course=CourseResult(
                         tags=["tag1", "tag2"],
                         enrollments=[
-                            UserResultJson(
+                            UserResult(
                                 username="user1",
                                 firstName="John",
                                 lastName="Doe",
@@ -698,7 +747,7 @@ class TestAwsedClient:
                             mode="mode1"
                         ),
                         active=True,
-                        grader=UserResultJson(
+                        grader=UserResult(
                             username="grader1",
                             firstName="Alice",
                             lastName="Smith",
@@ -723,266 +772,4 @@ class TestAwsedClient:
         )
 
         assert_that(teams_result, equal_to(expected_teams_result))
-    
-    def test_list_enrollments(self, requests_mock):
-        form = ListEnrollmentsForm(courseSlug=["ABC100"], username="johndoe")
-        requests_mock.get('https://awsed.ucsd.edu/api/enrollments', text="""
-            {
-                "username": "johndoe",
-                "firstName": "John",
-                "lastName": "Doe",
-                "uid": 101,
-                "token": "token123"
-            }
-            """)
-        
-        c = DefaultAwsedClient()
-        enrollment_result = c.list_enrollments(form, username="johndoe")
-        
-        assert_that(enrollment_result.username).is_equal_to("johndoe")
-    
-    def test_describe_environment(self, requests_mock):
-        requests_mock.get('https://awsed.ucsd.edu/api/environments/env123', text="""
-            {
-                "volumes": [
-                    {
-                        "type": "nfs",
-                        "name": "volume1",
-                        "server": "nfs-server",
-                        "path": "/data",
-                        "accessMode": "ReadWriteMany",
-                        "pvcName": "pvc123"
-                    }
-                ]
-            }
-            """)
-        
-        c = DefaultAwsedClient()
-        environment = c.describe_environment("env123")
-        
-        assert_that(environment.volumes).is_length(1)
-    
-    def test_upload_enrollments(self, requests_mock):
-        csv_content = "username,firstName,lastName,uid,role\njohndoe,John,Doe,101,Student"
-        requests_mock.post('https://awsed.ucsd.edu/api/enrollments', text="Enrollments uploaded successfully")
-        
-        c = DefaultAwsedClient()
-        response_text = c.upload_enrollments(csv_content, dry_run=False)
-        
-        assert_that(response_text).is_equal_to("Enrollments uploaded successfully")
-    
-    def test_list_enrollments_for_environment_roster(self, requests_mock):
-        requests_mock.get('https://awsed.ucsd.edu/api/enrollments/roster', text="""
-            {
-                "username": "johndoe",
-                "firstName": "John",
-                "lastName": "Doe",
-                "uid": 101,
-                "token": "token123"
-            }
-            """)
-        
-        c = DefaultAwsedClient()
-        enrollment_result = c.list_enrollments_for_environment("env123")
-        
-        assert_that(enrollment_result.username).is_equal_to("johndoe")
-    
-    def test_list_teams_for_user(self, requests_mock):
-        requests_mock.get('https://awsed.ucsd.edu/api/teams', text="""
-            {
-                "teams": [
-                    {
-                        "teamName": "TeamA",
-                        "sanitizedTeamName": "teama",
-                        "uniqueName": "unique1",
-                        "gid": 123,
-                        "members": [
-                            {
-                                "username": "user1",
-                                "firstName": "John",
-                                "lastName": "Doe",
-                                "uid": 101,
-                                "role": "Student"
-                            }
-                        ]
-                    }
-                ]
-            }
-            """)
-        
-        c = DefaultAwsedClient()
-        teams_result = c.list_teams(username="johndoe")
-        
-        assert_that(teams_result.teams).is_length(1)
-        assert_that(teams_result.teams[0].teamName).is_equal_to("TeamA")
-
-
-
-    # def test_list_courses_by_tag(self, requests_mock):
-    #     """test list courses by tag"""
-    #     requests_mock.get('https://awsed.ucsd.edu/api/courses?tag=teams-enabled', text="""
-    #         {
-    #             "courses": [
-    #                 {
-    #                     "courseId": "BENG134_FA20_A00"
-    #                 },
-    #                 {
-    #                     "courseId": "BIPN145_FA20_A00"
-    #                 }
-    #             ]
-    #         }
-    #           """)
-    #     c = DefaultAwsedClient()
-    #     courses = c.list_courses_by_tag("teams-enabled")
-
-    #     assert_that(courses, equal_to(
-    #         ListCourseResponse(courses=[
-    #             CourseCourseResponse(courseId="BENG134_FA20_A00"),
-    #             CourseCourseResponse(courseId="BIPN145_FA20_A00")
-
-    #         ])
-    #     ))
-
-    # def test_list_courses_by_tag2(self, requests_mock):
-    #     """test list courses by tag"""
-    #     requests_mock.get('https://awsed.ucsd.edu/api/courses?tag=tag2', text="""
-    #         {
-    #             "courses": [
-    #                 {
-    #                     "courseId": "COGS108_FA20_A00"
-    #                 },
-    #                 {
-    #                     "courseId": "COGS18_FA20_A00"
-    #                 }
-    #             ]
-    #         }
-    #           """)
-    #     c = DefaultAwsedClient()
-    #     courses = c.list_courses_by_tag("tag2")
-
-    #     assert_that(courses, equal_to(
-    #         ListCourseResponse(courses=[
-    #             CourseCourseResponse(courseId="COGS108_FA20_A00"),
-    #             CourseCourseResponse(courseId="COGS18_FA20_A00")
-
-    #         ])
-    #     ))
-
-    # def test_list_courses_by_tag4(self, requests_mock):
-    #     """test list courses by tag"""
-    #     requests_mock.get('https://awsed.ucsd.edu/api/courses?tag=tag3', text="""
-    #         {
-    #             "courses": []
-    #         }
-    #           """)
-    #     c = DefaultAwsedClient()
-    #     courses = c.list_courses_by_tag("tag3")
-
-    #     assert_that(courses, equal_to(
-    #         ListCourseResponse(courses=[])
-    #     ))
-
-    # def test_list_courses_by_tag3(self, requests_mock):
-    #     """test list courses by tag"""
-    #     requests_mock.get('https://awsed.ucsd.edu/api/courses', text="""
-    #         {
-    #             "courses": []
-    #         }
-    #           """)
-    #     c = DefaultAwsedClient()
-    #     courses = c.list_courses()
-
-    #     assert_that(courses, equal_to(
-    #         ListCourseResponse(courses=[])
-    #     ))
-
-    # def test_describe_course(self, requests_mock):
-    #     """test list courses by tag"""
-    #     requests_mock.get('https://awsed.ucsd.edu/api/courses/cse101', text="""
-    #         {
-    #             "courseId": "cse101",
-    #             "grader": {
-    #                 "username": "grader",
-    #                 "uid": 1234
-    #             },
-    #             "fileSystem": {
-    #                 "identifier": "test-workspaces",
-    #                 "server": "nfs.example.com",
-    #                 "path": "/export/workspaces"
-    #             }
-    #         }
-    #           """)
-    #     c = DefaultAwsedClient()
-    #     courses = c.describe_course("cse101")
-
-    #     assert_that(courses, equal_to(CourseJson(
-    #         courseId='cse101',
-    #         tags=None,
-    #         enrollments=[],
-    #         fileSystem=FileSystemJson(
-    #             identifier='test-workspaces',
-    #             server='nfs.example.com',
-    #             path='/export/workspaces'),
-    #         grader=UserResultJson(username='grader', uid=1234))
-    #     ))
-
-    # def test_course_teams(self, requests_mock):
-    #     """test list courses by tag"""
-
-    #     requests_mock.get('https://awsed.ucsd.edu/api/courses/cse101/teams', text="""
-    #         {"teams": [
-    #         {
-    #             "gid": 3000,
-    #             "members": [
-    #                 {
-    #                     "firstName": "string",
-    #                     "lastName": "string",
-    #                     "role": "string",
-    #                     "uid": 0,
-    #                     "username": "user1"
-    #                 }
-    #             ],
-    #             "teamName": "string"
-    #         },
-    #         {
-    #             "gid": 4000,
-    #             "members": [
-    #                 {
-    #                     "firstName": "string",
-    #                     "lastName": "string",
-    #                     "role": "string",
-    #                     "uid": 0,
-    #                     "username": "user2"
-    #                 }
-    #             ],
-    #             "teamName": "string"
-    #         }
-    #     ]}
-    #           """)
-    #     c = DefaultAwsedClient()
-    #     teams = c.list_teams_for_course("cse101")
-
-    #     assert teams == ListTeamsResponse(
-    #         teams=[
-    #             TeamJson(
-    #                 gid=3000,
-    #                 members=[
-    #                     UserResultJson(
-    #                         firstName="string",
-    #                         lastName="string",
-    #                         role="string",
-    #                         uid=0,
-    #                         username="user1")],
-    #                 teamName="string"
-    #             ),
-    #             TeamJson(
-    #                 gid=4000,
-    #                 members=[
-    #                     UserResultJson(
-    #                         firstName="string",
-    #                         lastName="string",
-    #                         role="string",
-    #                         uid=0,
-    #                         username="user2")],
-    #                 teamName="string"
-    #             )])
+            

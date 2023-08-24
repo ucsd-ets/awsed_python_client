@@ -20,7 +20,7 @@ class DefaultAwsedClient:
     def list_user_launch_profiles(self, username: str) -> UserLaunchProfilesResult:
         return self.dataclass_request(UserLaunchProfilesResult, f"/user-launch-profiles/{username}")
     
-    def list_enrollments_for_environment(self, form: ListEnrollmentsForm, username: Optional[str] = None) -> EnvironmentEnrollmentResult:
+    def list_enrollments(self, form: ListEnrollmentsForm, username: Optional[str] = None) -> EnvironmentEnrollmentResult:
         params = {'form': form}
         if username:
             params['username'] = username
@@ -89,14 +89,12 @@ class DefaultAwsedClient:
     def list_course_teams(self, course: str) -> TeamsResult:
         return self.dataclass_request(TeamsResult, f"/courses/{course}/teams")
 
-    def list_enrollments(self, form: ListEnrollmentsForm, username: str = None) -> EnvironmentEnrollmentResult:
-        params = {'form': form}
-        if username:
-            params['username'] = username
-        return self.dataclass_request(EnvironmentEnrollmentResult, "/enrollments", params=params)
-
-    def describe_environment(self, slug: str) -> EnvironmentJson:
+    def list_enrollments_slug(self, slug: str) -> EnvironmentJson:
         return self.dataclass_request(EnvironmentJson, f"/environments/{slug}")
+    
+    def list_enrollments_roster(self, slug: str) -> EnvironmentEnrollmentResult:
+        return self.dataclass_request(EnvironmentEnrollmentResult, f"/environments/{slug}/roster")
+        
 
     def upload_enrollments(self, csv_content: str, dry_run: bool = False) -> str:
         url = "/enrollments"
@@ -108,7 +106,7 @@ class DefaultAwsedClient:
         
         return True
     
-    def list_teams_user(self, username: str) -> TeamsResult:
+    def list_teams(self, username: str) -> TeamsResult:
         return self.dataclass_request(TeamsResult, "/teams", params={'username': username})
 
     def json_request(self, url):

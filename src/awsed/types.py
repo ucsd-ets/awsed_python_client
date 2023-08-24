@@ -66,6 +66,14 @@ class UserResultJson:
     lastName: str
     uid: int
     enrollments: List[str]
+    
+@dataclass
+class UserResult:
+    username: str
+    firstName: str
+    lastName: str
+    uid: int
+    role: str
 
 @dataclass
 class KubernetesEnvironmentVariable:
@@ -143,11 +151,11 @@ class ImmutablePool:
 @dataclass
 class CourseResult:
     tags: List[str]
-    enrollments: List[UserResultJson]
+    enrollments: List[UserResult]
     courseId: str
     pool: ImmutablePool
     active: bool
-    grader: UserResultJson
+    grader: UserResult
     fileSystem: FileSystemResult
     snowTicket: str
     quarter: str
@@ -167,7 +175,7 @@ class TeamResult:
     sanitizedTeamName: str
     uniqueName: str
     gid: int
-    members: List[UserResultJson]
+    members: List[UserResult]
     course: CourseResult
 
 @dataclass
@@ -199,10 +207,6 @@ class PoolsResult:
     pools: List[PoolJson]
 
 @dataclass
-class EnvironmentJson:
-    volumes: List[KubernetesVolume]
-
-@dataclass
 class Volume:
     type: str
     name: str
@@ -210,6 +214,10 @@ class Volume:
     path: str
     accessMode: str
     pvcName: str
+
+@dataclass
+class EnvironmentJson:
+    volumes: List[Volume]
 
 @dataclass
 class EnvironmentEnrollmentResult:
