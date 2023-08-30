@@ -5,10 +5,14 @@ from awsed.types import *
 
 
 class TestAwsedClient:
+    client: DefaultAwsedClient
     # noinspection PyMethodMayBeStatic
     def setup_method(self) -> None:
         os.environ['AWSED_ENDPOINT'] = 'https://awsed.ucsd.edu/api'
         os.environ['AWSED_API_KEY'] = "1234"
+        self.client = DefaultAwsedClient(
+            endpoint=os.getenv('AWSED_ENDPOINT'), 
+            awsed_api_key=os.getenv('AWSED_API_KEY'))
 
     # noinspection PyMethodMayBeStatic
     def teardown_method(self) -> None:
@@ -28,9 +32,7 @@ class TestAwsedClient:
                 ]
             }
             """)
-            
-        c = DefaultAwsedClient()
-        user = c.describe_user("johndoe")
+        user = self.client.describe_user("johndoe")
         
         userResultJson1 = UserResultJson(
             username="johndoe",
@@ -102,8 +104,7 @@ class TestAwsedClient:
             }
             """)
 
-        c = DefaultAwsedClient()
-        launch_profiles = c.list_user_launch_profiles("johndoe")
+        launch_profiles = self.client.list_user_launch_profiles("johndoe")
 
         assert_that(launch_profiles, equal_to(UserLaunchProfilesResult(
             launchProfiles=[
@@ -146,9 +147,8 @@ class TestAwsedClient:
             """,
             )
 
-        c = DefaultAwsedClient()
         form = ListEnrollmentsForm(courseSlugs=["ABC100", "ABC101"], username="johndoe", courseSlug=["ABC100"])
-        enrollment_result = c.list_enrollments(form, "johndoe")
+        enrollment_result = self.client.list_enrollments(form, "johndoe")
 
         assert_that(enrollment_result, equal_to(EnvironmentEnrollmentResult(
             username="johndoe",
@@ -161,9 +161,8 @@ class TestAwsedClient:
     def test_import_enrollments(self, requests_mock):
         requests_mock.post('https://awsed.ucsd.edu/api/enrollments')
 
-        c = DefaultAwsedClient()
         csv_content = "username,firstName,lastName,uid\njohndoe,John,Doe,12345"
-        result = c.import_enrollments(csv_content, dry_run=False)
+        result = self.client.import_enrollments(csv_content, dry_run=False)
 
         assert_that(result, True)
 
@@ -183,8 +182,7 @@ class TestAwsedClient:
             }
             """)
 
-        c = DefaultAwsedClient()
-        pools_result = c.list_pools_under_root("pool_root")
+        pools_result = self.client.list_pools_under_root("pool_root")
 
         assert_that(pools_result, equal_to(PoolsResult(
             pools=[
@@ -209,13 +207,12 @@ class TestAwsedClient:
             }
             """)
 
-        c = DefaultAwsedClient()
         course_environment = AssociateCourseEnvironmentRequestBody(
             environment="env",
             status="APPROVED",
             notes="Test environment created successfully"
         )
-        result = c.post_course_environment("ABC100", course_environment)
+        result = self.client.post_course_environment("ABC100", course_environment)
 
         assert_that(result, True)
 
@@ -229,8 +226,7 @@ class TestAwsedClient:
             }
             """)
 
-        c = DefaultAwsedClient()
-        course_environment = c.get_course_environment("ABC100", "env")
+        course_environment = self.client.get_course_environment("ABC100", "env")
 
         assert_that(course_environment, equal_to(CourseEnvironmentResult(
             name="CourseEnv",
@@ -246,8 +242,7 @@ class TestAwsedClient:
         
         requests_mock.patch(f'https://awsed.ucsd.edu/api/courses/{course}/environments/{environment}')
             
-        c = DefaultAwsedClient()
-        result = c.patch_course_environment(course, environment, modification)
+        result = self.client.patch_course_environment(course, environment, modification)
         
         assert_that(result, True)
 
@@ -270,9 +265,8 @@ class TestAwsedClient:
             }
             """)
             
-        c = DefaultAwsedClient()
         request = ListCourseEnvironmentsRequestBody(status="APPROVED", subject="CS", term="Fall", authentication=Authentication(username="jdoe", admin=False, ta=False, student=True))
-        result = c.list_course_environments(request)
+        result = self.client.list_course_environments(request)
         
         assert_that(result, equal_to(ListCourseEnvironmentsResultJson(
             environments=[
@@ -287,8 +281,7 @@ class TestAwsedClient:
         
         requests_mock.post(f'https://awsed.ucsd.edu/api/courses/{course}/roles/{role}/credentials', text="generated_aws_credentials")
             
-        c = DefaultAwsedClient()
-        result = c.generate_aws_credentials(course, role)
+        result = self.client.generate_aws_credentials(course, role)
         
         assert_that(result, equal_to(True))
 
@@ -309,8 +302,7 @@ class TestAwsedClient:
             }
             """)
             
-        c = DefaultAwsedClient()
-        result = c.list_courses(username, tag)
+        result = self.client.list_courses(username, tag)
         
         assert_that(result, equal_to(ListCoursesResultJson(
             courses=[
@@ -340,8 +332,7 @@ class TestAwsedClient:
             "Course created successfully."
             """)
             
-        c = DefaultAwsedClient()
-        result = c.create_course(course_data)
+        result = self.client.create_course(course_data)
         
         assert_that(result, True)
 
@@ -402,8 +393,7 @@ class TestAwsedClient:
         
         requests_mock.get(f'https://awsed.ucsd.edu/api/courses/{course_slug}/launch-profiles', json=response_data)
         
-        c = DefaultAwsedClient()
-        result = c.list_course_launch_profiles(course_slug)
+        result = self.client.list_course_launch_profiles(course_slug)
         
         expected_result = ListLaunchProfilesJson(launchProfiles=[
             LaunchProfileJson(
@@ -466,8 +456,7 @@ class TestAwsedClient:
         
         requests_mock.post(f'https://awsed.ucsd.edu/api/courses/{course_slug}/launch-profiles')
             
-        c = DefaultAwsedClient()
-        result = c.create_course_launch_profile(course_slug, launch_profile_data)
+        result = self.client.create_course_launch_profile(course_slug, launch_profile_data)
         
         assert_that(result, equal_to(True))
 
@@ -517,8 +506,7 @@ class TestAwsedClient:
         
         requests_mock.get(f'https://awsed.ucsd.edu/api/courses/{course_slug}', json=response_data)
         
-        c = DefaultAwsedClient()
-        result = c.describe_course(course_slug)
+        result = self.client.describe_course(course_slug)
         
         expected_result = CourseResult(
             tags=["tag1", "tag2"],
@@ -583,8 +571,7 @@ class TestAwsedClient:
 
         requests_mock.patch('https://awsed.ucsd.edu/api/courses/CS101')
         
-        c = DefaultAwsedClient()
-        response_text = c.update_course("CS101", course_data)
+        response_text = self.client.update_course("CS101", course_data)
         
         assert_that(response_text, equal_to(True))
     
@@ -604,8 +591,7 @@ class TestAwsedClient:
             }
             """)
         
-        c = DefaultAwsedClient()
-        environment = c.list_enrollments_slug("env123")
+        environment = self.client.list_enrollments_slug("env123")
         
         assert_that(environment, equal_to(EnvironmentJson(volumes=[
             Volume(type="nfs", name="volume1", server="nfs-server", path="/data", accessMode="ReadWriteMany", pvcName="pvc123")
@@ -615,8 +601,7 @@ class TestAwsedClient:
         csv_content = "username,firstName,lastName,uid,role\njohndoe,John,Doe,101,Student"
         requests_mock.post('https://awsed.ucsd.edu/api/enrollments', text="Enrollments uploaded successfully")
         
-        c = DefaultAwsedClient()
-        response_text = c.upload_enrollments(csv_content, dry_run=False)
+        response_text = self.client.upload_enrollments(csv_content, dry_run=False)
         
         assert_that(response_text, equal_to(True))
     
@@ -631,8 +616,7 @@ class TestAwsedClient:
             }
             """)
         
-        c = DefaultAwsedClient()
-        enrollment_result = c.list_enrollments_roster("env123")
+        enrollment_result = self.client.list_enrollments_roster("env123")
         
         assert_that(enrollment_result, equal_to(EnvironmentEnrollmentResult(
             username="johndoe",
@@ -705,9 +689,8 @@ class TestAwsedClient:
                 ]
             }
         """)
-        
-        c = DefaultAwsedClient()
-        teams_result = c.list_course_teams("ABC101")
+
+        teams_result = self.client.list_course_teams("ABC101")
 
         # Creating expected TeamResult object with specific values
         expected_teams_result = TeamsResult(
