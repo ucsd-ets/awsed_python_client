@@ -151,11 +151,13 @@ class TestAwsedClient:
         enrollment_result = self.client.list_enrollments(form, "johndoe")
 
         assert_that(enrollment_result, equal_to(EnvironmentEnrollmentResult(
-            username="johndoe",
-            firstName="john",
-            lastName="doe",
-            uid=12345,
-            token="abc123"
+            enrollments=[EnvironmentEnrollmentResult(
+                username="johndoe",
+                firstName="john",
+                lastName="doe",
+                uid=12345,
+                token="abc123"
+            )]
         )))
     
     def test_import_enrollments(self, requests_mock):

@@ -220,12 +220,16 @@ class EnvironmentJson:
     volumes: List[Volume]
 
 @dataclass
-class EnvironmentEnrollmentResult:
+class EnrollmentResult:
     username: str
     firstName: str
     lastName: str
     uid: int
     token: str
+
+@dataclass
+class EnvironmentEnrollmentResult:
+    enrollments: [EnrollmentResult]
 
 @dataclass
 class ListEnrollmentsForm:
