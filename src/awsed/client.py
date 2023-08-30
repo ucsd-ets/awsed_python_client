@@ -68,25 +68,6 @@ class DefaultAwsedClient:
     def list_courses(self, username: str = None, tag: str = None) -> ListCoursesResultJson:
         return self.dataclass_request(ListCoursesResultJson, "/courses", params={'username': username, 'tag': tag})
     
-    # todo: to test
-    def get_active_courses(self, username: str = None, tag: str = None) -> [CourseResult]:
-        results: [CourseResult] = []
-        courses: ListCoursesResultJson = self.list_courses(username=username, tag=tag)
-        for course in courses.courses:
-            courseResult: CourseResult = self.describe_course(course=course.courseId)
-
-            if courseResult.fileSystem == None:
-                continue
-            id = courseResult.courseId
-            server = courseResult.fileSystem.server
-            if len(courseResult.enrollments) != 0:
-                users = []
-                for user in courseResult.enrollments:
-                    user = UserResult(username= user.username, uid=user.uid) 
-                    users.append(user)
-            results.append(CourseResult(courseId=id, enrollments=users, server=server)) 
-        return results
-    
     def create_course(self, course: CourseRequestJson) -> CourseRequestJson:
         result = self.post_request("/courses", data=course)
         return True
