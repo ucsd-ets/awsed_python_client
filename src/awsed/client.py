@@ -10,7 +10,7 @@ from awsed.types import *;
 
 
 class DefaultAwsedClient:
-    def __init__(self, endpoint: str, awsed_api_key: srt):
+    def __init__(self, endpoint: str, awsed_api_key: str):
         self.endpoint = endpoint
         self.awsed_api_key = awsed_api_key
 
