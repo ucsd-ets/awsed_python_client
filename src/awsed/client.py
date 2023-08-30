@@ -10,9 +10,9 @@ from awsed.types import *;
 
 
 class DefaultAwsedClient:
-    def __init__(self):
-        self.endpoint = os.environ.get('AWSED_ENDPOINT')
-        self.awsed_api_key = os.environ.get('AWSED_API_KEY')
+    def __init__(self, endpoint: str, awsed_api_key: srt):
+        self.endpoint = endpoint
+        self.awsed_api_key = awsed_api_key
 
     def describe_user(self, username: str) -> UserResultJson:
         return self.dataclass_request(UserResultJson, f"/users/{username}")
