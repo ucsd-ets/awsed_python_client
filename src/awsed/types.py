@@ -150,7 +150,7 @@ class ImmutablePool:
 
 @dataclass
 class CourseResult:
-    tags: List[str]
+    tags: Optional[List[str]]
     enrollments: List[UserResult]
     courseId: str
     pool: ImmutablePool
@@ -229,7 +229,7 @@ class EnrollmentResult:
 
 @dataclass
 class EnvironmentEnrollmentResult:
-    enrollments: [EnrollmentResult]
+    enrollments: List[EnrollmentResult]
 
 @dataclass
 class ListEnrollmentsForm:
