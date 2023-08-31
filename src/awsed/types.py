@@ -153,7 +153,7 @@ class CourseResult:
     tags: Optional[List[str]]
     enrollments: List[UserResult]
     courseId: str
-    pool: ImmutablePool
+    pool: Optional[ImmutablePool]
     active: bool
     grader: UserResult
     fileSystem: FileSystemResult
