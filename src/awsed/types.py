@@ -155,14 +155,14 @@ class CourseResult:
     courseId: str
     pool: Optional[ImmutablePool]
     active: bool
-    grader: UserResult
+    grader: Optional[UserResult]
     fileSystem: Optional[FileSystemResult]
-    snowTicket: str
-    quarter: str
-    subject: str
-    courseNumber: str
-    instructor: str
-    instructorEmail: str
+    snowTicket: Optional[str]
+    quarter: Optional[str]
+    subject: Optional[str]
+    courseNumber: Optional[str]
+    instructor: Optional[str]
+    instructorEmail: Optional[str]
     courseName: str
 
 @dataclass
