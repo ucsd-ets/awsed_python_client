@@ -151,7 +151,7 @@ class ImmutablePool:
 @dataclass
 class CourseResult:
     tags: Optional[List[str]]
-    enrollments: List[UserResult]
+    enrollments: Optional[List[UserResult]]
     courseId: str
     pool: Optional[ImmutablePool]
     active: bool
