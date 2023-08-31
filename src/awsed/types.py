@@ -163,7 +163,7 @@ class CourseResult:
     courseNumber: Optional[str]
     instructor: Optional[str]
     instructorEmail: Optional[str]
-    courseName: str
+    courseName: Optional[str]
 
 @dataclass
 class CourseJson:
