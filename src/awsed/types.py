@@ -70,8 +70,8 @@ class UserResultJson:
 @dataclass
 class UserResult:
     username: str
-    firstName: str
-    lastName: str
+    firstName: Optional[str]
+    lastName: Optional[str]
     uid: int
     role: str
 
@@ -229,7 +229,7 @@ class EnrollmentResult:
 
 @dataclass
 class EnvironmentEnrollmentResult:
-    enrollments: List[EnrollmentResult]
+    enrollments: Optional[List[EnrollmentResult]]
 
 @dataclass
 class ListEnrollmentsForm:
