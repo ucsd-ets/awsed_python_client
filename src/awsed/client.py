@@ -24,7 +24,7 @@ class DefaultAwsedClient:
         params = {'form': form}
         if username:
             params['username'] = username
-        return self.dataclass_request(EnvironmentEnrollmentResult, "/enrollments", params=params)
+        return EnvironmentEnrollmentResult(self.list_of_dataclass_request(EnrollmentResult, "/enrollments", params=params))
 
     def import_enrollments(self, csv_content: str, dry_run: bool = False) -> str:
         url = "/enrollments"
@@ -120,6 +120,15 @@ class DefaultAwsedClient:
         self.check_error(result)
 
         return from_dict(data_class=data_class, data=result.json())
+
+    def list_of_dataclass_request(self, data_class, url, params=None):
+        result = requests.get(self.endpoint + url, headers=self.auth(), params=params)
+        self.check_error(result)
+        output = []
+        result = result.json()
+        for entry in result:
+            output.append(from_dict(data_class=data_class, data=entry))
+        return output
     
     def post_request(self, url: str, params: dict = None, headers: dict = None, data: str = None) -> requests.Response:
         full_url = self.endpoint + url
