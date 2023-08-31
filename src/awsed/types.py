@@ -156,7 +156,7 @@ class CourseResult:
     pool: Optional[ImmutablePool]
     active: bool
     grader: UserResult
-    fileSystem: FileSystemResult
+    fileSystem: Optional[FileSystemResult]
     snowTicket: str
     quarter: str
     subject: str
