@@ -225,7 +225,7 @@ class EnrollmentResult:
     firstName: str
     lastName: str
     uid: int
-    token: str
+    token: Optional[str]
 
 @dataclass
 class EnvironmentEnrollmentResult:
