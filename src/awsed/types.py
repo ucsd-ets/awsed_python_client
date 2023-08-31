@@ -73,7 +73,7 @@ class UserResult:
     firstName: Optional[str]
     lastName: Optional[str]
     uid: int
-    role: str
+    role: Optional[str]
 
 @dataclass
 class KubernetesEnvironmentVariable:
