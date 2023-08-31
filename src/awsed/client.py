@@ -93,8 +93,7 @@ class DefaultAwsedClient:
         return self.dataclass_request(EnvironmentJson, f"/environments/{slug}")
     
     def list_enrollments_roster(self, slug: str) -> EnvironmentEnrollmentResult:
-        return self.dataclass_request(EnvironmentEnrollmentResult, f"/environments/{slug}/roster")
-        
+        return EnvironmentEnrollmentResult(self.list_of_dataclass_request(EnrollmentResult, f"/environments/{slug}/roster"))
 
     def upload_enrollments(self, csv_content: str, dry_run: bool = False) -> str:
         url = "/enrollments"
