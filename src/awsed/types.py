@@ -172,11 +172,11 @@ class CourseJson:
 @dataclass
 class TeamResult:
     teamName: str
-    sanitizedTeamName: str
-    uniqueName: str
+    sanitizedTeamName: Optional[str]
+    uniqueName: Optional[str]
     gid: int
     members: List[UserResult]
-    course: CourseResult
+    course: Optional[CourseResult]
 
 @dataclass
 class TeamsResult:
