@@ -222,8 +222,8 @@ class EnvironmentJson:
 @dataclass
 class EnrollmentResult:
     username: str
-    firstName: str
-    lastName: str
+    firstName: Optional[str]
+    lastName: Optional[str]
     uid: int
     token: Optional[str]
 
