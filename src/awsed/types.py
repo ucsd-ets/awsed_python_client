@@ -175,7 +175,7 @@ class TeamResult:
     sanitizedTeamName: Optional[str]
     uniqueName: Optional[str]
     gid: int
-    members: List[UserResult]
+    members: Optional[List[UserResult]]
     course: Optional[CourseResult]
 
 @dataclass
