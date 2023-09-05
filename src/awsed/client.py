@@ -121,7 +121,7 @@ class DefaultAwsedClient:
         if (assertNotNone):
             assert result.text != "null"
             assert result.text != ""
-            assert result.json() is not None
+            assert result.json() is not None and result.json() != {}
 
         return from_dict(data_class=data_class, data=result.json())
 

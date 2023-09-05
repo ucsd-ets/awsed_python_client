@@ -48,6 +48,9 @@ class TestAwsedClient:
         requests_mock.get('https://awsed.ucsd.edu/api/users/johndoe', text="""""")
         assert_that(lambda: self.client.describe_user("johndoe"), raises(AssertionError))
         
+        requests_mock.get('https://awsed.ucsd.edu/api/users/johndoe', json={})
+        assert_that(lambda: self.client.describe_user("johndoe"), raises(AssertionError))
+        
     def test_list_user_launch_profiles(self, requests_mock):
         requests_mock.get('https://awsed.ucsd.edu/api/user-launch-profiles/johndoe', text="""
             {
