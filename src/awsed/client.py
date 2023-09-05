@@ -15,7 +15,7 @@ class DefaultAwsedClient:
         self.awsed_api_key = awsed_api_key
 
     def describe_user(self, username: str) -> UserResultJson:
-        return self.dataclass_request(UserResultJson, f"/users/{username}", noneIfNotFound=True)
+        return self.dataclass_request(UserResultJson, f"/users/{username}")
     
     def list_user_launch_profiles(self, username: str) -> UserLaunchProfilesResult:
         return self.dataclass_request(UserLaunchProfilesResult, f"/user-launch-profiles/{username}")
@@ -113,7 +113,7 @@ class DefaultAwsedClient:
 
         return result.json()
 
-    def dataclass_request(self, data_class, url, params=None, noneIfNotFound=False, assertNotNone=False):
+    def dataclass_request(self, data_class, url, params=None, noneIfNotFound=True, assertNotNone=False):
         result = requests.get(self.endpoint + url, headers=self.auth(), params=params)
         
         self.check_error(result)
