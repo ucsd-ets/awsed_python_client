@@ -15,7 +15,7 @@ class DefaultAwsedClient:
         self.awsed_api_key = awsed_api_key
 
     def describe_user(self, username: str) -> UserResultJson:
-        return self.dataclass_request(UserResultJson, f"/users/{username}", assertNotNone=True)
+        return self.dataclass_request(UserResultJson, f"/users/{username}", noneIfNotFound=True)
     
     def list_user_launch_profiles(self, username: str) -> UserLaunchProfilesResult:
         return self.dataclass_request(UserLaunchProfilesResult, f"/user-launch-profiles/{username}")
@@ -113,15 +113,18 @@ class DefaultAwsedClient:
 
         return result.json()
 
-    def dataclass_request(self, data_class, url, params=None, assertNotNone=False):
+    def dataclass_request(self, data_class, url, params=None, noneIfNotFound=False, assertNotNone=False):
         result = requests.get(self.endpoint + url, headers=self.auth(), params=params)
         
         self.check_error(result)
         
-        if (assertNotNone):
-            assert result.text != "null"
-            assert result.text != ""
-            assert result.json() is not None and result.json() != {}
+        missing = result.text == "null" or result.text == "" or result.json() is None or result.json() == {}
+        
+        if (missing and assertNotNone):
+            raise AssertionError(f"Expected {url} to not be null")
+        
+        if (missing and noneIfNotFound):
+            return None
 
         return from_dict(data_class=data_class, data=result.json())
 
