@@ -1,5 +1,5 @@
 import os
-from hamcrest import assert_that, equal_to
+from hamcrest import assert_that, equal_to, raises
 from awsed.client import DefaultAwsedClient
 from awsed.types import *
 
@@ -43,6 +43,10 @@ class TestAwsedClient:
         )
 
         assert_that(user, equal_to(userResultJson1))
+        
+    def test_get_user_none(self, requests_mock):
+        requests_mock.get('https://awsed.ucsd.edu/api/users/johndoe', text="""""")
+        assert_that(lambda: self.client.describe_user("johndoe"), raises(AssertionError))
         
     def test_list_user_launch_profiles(self, requests_mock):
         requests_mock.get('https://awsed.ucsd.edu/api/user-launch-profiles/johndoe', text="""
