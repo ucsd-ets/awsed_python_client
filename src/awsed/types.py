@@ -154,7 +154,7 @@ class CourseResult:
     enrollments: Optional[List[UserResult]]
     courseId: str
     pool: Optional[ImmutablePool]
-    active: bool
+    active: Optional[bool]
     grader: Optional[UserResult]
     fileSystem: Optional[FileSystemResult]
     snowTicket: Optional[str]
