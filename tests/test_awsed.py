@@ -3,6 +3,8 @@ from hamcrest import assert_that, equal_to, raises
 from awsed.client import DefaultAwsedClient
 from awsed.types import *
 
+from requests.exceptions import HTTPError
+
 
 class TestAwsedClient:
     client: DefaultAwsedClient
@@ -560,6 +562,16 @@ class TestAwsedClient:
         )
         
         assert_that(result, equal_to(expected_result))
+
+    def test_describe_course_error(self, requests_mock):
+        requests_mock.get('https://awsed.ucsd.edu/api/courses/mycourse', json={
+            "error": {
+                "message": "Course not found"
+                }
+            }, status_code=404)
+
+        assert_that(lambda: self.client.describe_course("mycourse"), raises(HTTPError))
+
 
     def test_update_course(self, requests_mock):
         course_data = CourseRequestJson(
