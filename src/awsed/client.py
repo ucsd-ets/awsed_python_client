@@ -255,7 +255,8 @@ class DefaultAwsedClient(AbstractAwsedClient):
 
     def check_error(self, result):
         if result.status_code >= 400 and result.status_code < 500:
-            raise HTTPError(result.json()["error"]["message"])
+            if result.json()["error"]:
+                raise HTTPError(result.json()["error"]["message"])
         if result.status_code >= 500:
             raise HTTPError("Internal server error", result.status_code)
 
