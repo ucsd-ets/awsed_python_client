@@ -169,7 +169,6 @@ class DefaultAwsedClient(AbstractAwsedClient):
     ):
     
         result = self.get_request(url, params)
-        result.raise_for_status()
 
         self.check_error(result)
         missing = self.is_result_missing(result)
@@ -258,13 +257,16 @@ class DefaultAwsedClient(AbstractAwsedClient):
         return result
 
     def check_error(self, result):
-        print(result.text)
-        result_json = result.json()
-        if result.status_code >= 400 and result.status_code < 500:
-            if result_json["error"]:
-                raise HTTPError(result_json["error"]["message"])
-        if result.status_code >= 500:
-            raise HTTPError("Internal server error", result.status_code)
+        try:
+            result.raise_for_status()
+        except requests.exceptions.HTTPError as e:
+            if result.code >= 400 and result.code < 500:
+                print("Error with the call: "+ str(e))
+                return
+            else: 
+                print("Error with the server: " + str(e))
+                return
+
 
     def auth(self):
         headers = {"Authorization": "AWSEd api_key=" + self.awsed_api_key}
