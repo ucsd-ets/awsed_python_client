@@ -260,7 +260,7 @@ class DefaultAwsedClient(AbstractAwsedClient):
         try:
             result.raise_for_status()
         except requests.exceptions.HTTPError as e:
-            if result.code >= 400 and result.code < 500:
+            if result.status_code >= 400 and result.status_code < 500:
                 print("Error with the call: "+ str(e))
                 return
             else: 
