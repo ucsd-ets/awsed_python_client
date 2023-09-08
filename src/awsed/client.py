@@ -1,5 +1,6 @@
 import json
 import os
+import sys
 
 import requests
 from requests.exceptions import HTTPError
@@ -262,10 +263,9 @@ class DefaultAwsedClient(AbstractAwsedClient):
         except requests.exceptions.HTTPError as e:
             if result.status_code >= 400 and result.status_code < 500:
                 print("Error with the call: "+ str(e))
-                return
             else: 
                 print("Error with the server: " + str(e))
-                return
+            raise Exception("Exited with the error!")
 
 
     def auth(self):
