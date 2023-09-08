@@ -250,8 +250,7 @@ class DefaultAwsedClient(AbstractAwsedClient):
             timeout=self.global_timeout,
         )
 
-        print(result)
-        result.raise_for_status() #debugging 
+        print(result.text)
         self.check_error(result)
 
         return result
