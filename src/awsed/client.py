@@ -167,9 +167,9 @@ class DefaultAwsedClient(AbstractAwsedClient):
     def dataclass_request(
         self, data_class, url, params=None, noneIfNotFound=True, assertNotNone=False
     ):
-        
-                result.raise_for_status()
+    
         result = self.get_request(url, params)
+        result.raise_for_status()
 
         self.check_error(result)
         missing = self.is_result_missing(result)
