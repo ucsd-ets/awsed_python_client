@@ -170,13 +170,7 @@ class DefaultAwsedClient(AbstractAwsedClient):
         result = self.get_request(url, params)
 
         self.check_error(result)
-
-        missing = (
-            result.text == "null"
-            or result.text == ""
-            or result.json() is None
-            or result.json() == {}
-        )
+        missing = self.is_result_missing(result)
 
         if missing and assertNotNone:
             raise AssertionError(f"Expected {url} to not be null")
@@ -187,15 +181,35 @@ class DefaultAwsedClient(AbstractAwsedClient):
         # May throw a DaciteError
         return from_dict(data_class=data_class, data=result.json())
 
-    def list_of_dataclass_request(self, data_class, url, params=None):
+    def list_of_dataclass_request(
+        self, data_class, url, params=None, noneIfNotFound=True, assertNotNone=False
+    ):
         result = self.get_request(url, params)
 
         self.check_error(result)
+        missing = self.is_result_missing(result)
+
+        if missing and assertNotNone:
+            raise AssertionError(f"Expected {url} to not be null")
+
+        if missing and noneIfNotFound:
+            return None
+
         output = []
         result = result.json()
         for entry in result:
             output.append(from_dict(data_class=data_class, data=entry))
         return output
+
+    def is_result_missing(self, result):
+        missing = (
+            result.text == "null"
+            or result.text == ""
+            or result.json() is None
+            or result.json() == {}
+        )
+
+        return missing
 
     def get_request(self, url, params):
         return requests.get(
