@@ -167,6 +167,8 @@ class DefaultAwsedClient(AbstractAwsedClient):
     def dataclass_request(
         self, data_class, url, params=None, noneIfNotFound=True, assertNotNone=False
     ):
+        
+                result.raise_for_status()
         result = self.get_request(url, params)
 
         self.check_error(result)
@@ -233,7 +235,6 @@ class DefaultAwsedClient(AbstractAwsedClient):
             timeout=self.global_timeout,
         )
 
-        result.raise_for_status()
         self.check_error(result)
 
         return result
