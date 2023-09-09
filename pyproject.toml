@@ -4,5 +4,16 @@ pythonpath = [
 ]
 
 [package]
-name = "AWSEd Client"
+name = "awsed_client"
 version = "0.1.0"
+authors = [
+    {name = "UC San Diego Information Technology Services - Academic Technology Services", email = "datahub@ucsd.edu"}
+]
+description = "Client for interacting with AWS Educate"
+readme = "README.md"
+keywords = ["awsed"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+]
+
+# Dependencies are in setup.py
