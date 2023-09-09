@@ -1,5 +1,6 @@
 import json
 import os
+import sys
 
 import requests
 from requests.exceptions import HTTPError
@@ -167,6 +168,7 @@ class DefaultAwsedClient(AbstractAwsedClient):
     def dataclass_request(
         self, data_class, url, params=None, noneIfNotFound=True, assertNotNone=False
     ):
+    
         result = self.get_request(url, params)
 
         self.check_error(result)
@@ -232,6 +234,7 @@ class DefaultAwsedClient(AbstractAwsedClient):
             data=data,
             timeout=self.global_timeout,
         )
+
         self.check_error(result)
 
         return result
@@ -249,15 +252,21 @@ class DefaultAwsedClient(AbstractAwsedClient):
             data=data,
             timeout=self.global_timeout,
         )
+
         self.check_error(result)
 
         return result
 
     def check_error(self, result):
-        if result.status_code >= 400 and result.status_code < 500:
-            raise HTTPError(result.json()["error"]["message"])
-        if result.status_code >= 500:
-            raise HTTPError("Internal server error", result.status_code)
+        try:
+            result.raise_for_status()
+        except requests.exceptions.HTTPError as e:
+            if result.status_code >= 400 and result.status_code < 500:
+                print("Error with the call: "+ str(e))
+            else: 
+                print("Error with the server: " + str(e))
+            raise Exception("Exited with the error!")
+
 
     def auth(self):
         headers = {"Authorization": "AWSEd api_key=" + self.awsed_api_key}
