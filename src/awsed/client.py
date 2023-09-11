@@ -263,9 +263,11 @@ class DefaultAwsedClient(AbstractAwsedClient):
         except requests.exceptions.HTTPError as e:
             if result.status_code >= 400 and result.status_code < 500:
                 print("Error with the call: "+ str(e))
+                raise Exception("Exited with the error!")
             else: 
                 print("Error with the server: " + str(e))
-            raise Exception("Exited with the error!")
+                raise Exception("Exited with the error!")
+
 
 
     def auth(self):
