@@ -1,4 +1,5 @@
 import os
+import unittest.mock
 from hamcrest import assert_that, equal_to, raises
 from awsed.client import DefaultAwsedClient
 from awsed.types import *
@@ -8,21 +9,25 @@ from requests.exceptions import HTTPError
 
 class TestAwsedClient:
     client: DefaultAwsedClient
+
     # noinspection PyMethodMayBeStatic
     def setup_method(self) -> None:
-        os.environ['AWSED_ENDPOINT'] = 'https://awsed.ucsd.edu/api'
-        os.environ['AWSED_API_KEY'] = "1234"
+        os.environ["AWSED_ENDPOINT"] = "https://awsed.ucsd.edu/api"
+        os.environ["AWSED_API_KEY"] = "1234"
         self.client = DefaultAwsedClient(
-            endpoint=os.getenv('AWSED_ENDPOINT'), 
-            awsed_api_key=os.getenv('AWSED_API_KEY'))
+            endpoint=os.getenv("AWSED_ENDPOINT"),
+            awsed_api_key=os.getenv("AWSED_API_KEY"),
+        )
 
     # noinspection PyMethodMayBeStatic
     def teardown_method(self) -> None:
-        os.environ.pop('AWSED_ENDPOINT')
-        os.environ.pop('AWSED_API_KEY')
-        
+        os.environ.pop("AWSED_ENDPOINT")
+        os.environ.pop("AWSED_API_KEY")
+
     def test_get_user(self, requests_mock):
-        requests_mock.get('https://awsed.ucsd.edu/api/users/johndoe', text="""
+        requests_mock.get(
+            "https://awsed.ucsd.edu/api/users/johndoe",
+            text="""
             {
                 "username": "johndoe",
                 "firstName": "john",
@@ -33,28 +38,31 @@ class TestAwsedClient:
                     "ABC101"
                 ]
             }
-            """)
+            """,
+        )
         user = self.client.describe_user("johndoe")
-        
+
         userResultJson1 = UserResultJson(
             username="johndoe",
             firstName="john",
             lastName="doe",
             uid=12345,
-            enrollments=["ABC100", "ABC101"]
+            enrollments=["ABC100", "ABC101"],
         )
 
         assert_that(user, equal_to(userResultJson1))
-        
+
     def test_get_user_none(self, requests_mock):
-        requests_mock.get('https://awsed.ucsd.edu/api/users/johndoe', text="""""")
+        requests_mock.get("https://awsed.ucsd.edu/api/users/johndoe", text="""""")
         assert_that(self.client.describe_user("johndoe"), equal_to(None))
-        
-        requests_mock.get('https://awsed.ucsd.edu/api/users/johndoe', json={})
+
+        requests_mock.get("https://awsed.ucsd.edu/api/users/johndoe", json={})
         assert_that(self.client.describe_user("johndoe"), equal_to(None))
-        
+
     def test_list_user_launch_profiles(self, requests_mock):
-        requests_mock.get('https://awsed.ucsd.edu/api/user-launch-profiles/johndoe', text="""
+        requests_mock.get(
+            "https://awsed.ucsd.edu/api/user-launch-profiles/johndoe",
+            text="""
             {
                 "launchProfiles": [
                     {
@@ -111,41 +119,74 @@ class TestAwsedClient:
                     }
                 ]
             }
-            """)
+            """,
+        )
 
         launch_profiles = self.client.list_user_launch_profiles("johndoe")
 
-        assert_that(launch_profiles, equal_to(UserLaunchProfilesResult(
-            launchProfiles=[
-                UserLaunchProfileJson(
-                    name="Profile1",
-                    application=ApplicationJson(
-                        name="App1",
-                        image="app1-image",
-                        description="Description of App1",
-                        pullPolicy="Always",
-                        volumeMounts=[
-                            KubernetesVolumeMount(name="volume1", mountPath="/mnt/data", mountPropagation="Bidirectional", subPath="sub/path", subPathExpr="sub/path/expr", readOnly=True)
-                        ],
-                        volumes=[
-                            KubernetesVolume(name="volume2", type="nfs", server="nfs-server", path="/nfs/share", accessMode="ReadWriteOnce", pvcName="nfs-pvc", nfs=True, hostPath=False)
-                        ],
-                        command="start-app",
-                        args=["arg1", "arg2"],
-                        environment=[
-                            KubernetesEnvironmentVariable(name="ENV_VAR_1", value="value1")
-                        ],
-                        extraYaml="apiVersion: v1\nkind: ConfigMap"
-                    ),
-                    player=PlayerJson(name="Player1", minCpu=1, maxCpu=4, minMemory=4096, maxMemory=8192, gpu=1),
-                    course="Course1"
+        assert_that(
+            launch_profiles,
+            equal_to(
+                UserLaunchProfilesResult(
+                    launchProfiles=[
+                        UserLaunchProfileJson(
+                            name="Profile1",
+                            application=ApplicationJson(
+                                name="App1",
+                                image="app1-image",
+                                description="Description of App1",
+                                pullPolicy="Always",
+                                volumeMounts=[
+                                    KubernetesVolumeMount(
+                                        name="volume1",
+                                        mountPath="/mnt/data",
+                                        mountPropagation="Bidirectional",
+                                        subPath="sub/path",
+                                        subPathExpr="sub/path/expr",
+                                        readOnly=True,
+                                    )
+                                ],
+                                volumes=[
+                                    KubernetesVolume(
+                                        name="volume2",
+                                        type="nfs",
+                                        server="nfs-server",
+                                        path="/nfs/share",
+                                        accessMode="ReadWriteOnce",
+                                        pvcName="nfs-pvc",
+                                        nfs=True,
+                                        hostPath=False,
+                                    )
+                                ],
+                                command="start-app",
+                                args=["arg1", "arg2"],
+                                environment=[
+                                    KubernetesEnvironmentVariable(
+                                        name="ENV_VAR_1", value="value1"
+                                    )
+                                ],
+                                extraYaml="apiVersion: v1\nkind: ConfigMap",
+                            ),
+                            player=PlayerJson(
+                                name="Player1",
+                                minCpu=1,
+                                maxCpu=4,
+                                minMemory=4096,
+                                maxMemory=8192,
+                                gpu=1,
+                            ),
+                            course="Course1",
+                        )
+                    ]
                 )
-            ]
-        )))
+            ),
+        )
 
     def test_list_enrollments(self, requests_mock):
-        #TODO: Learn about Rest object parameters
-        requests_mock.get('https://awsed.ucsd.edu/api/enrollments', text="""
+        # TODO: Learn about Rest object parameters
+        requests_mock.get(
+            "https://awsed.ucsd.edu/api/enrollments",
+            text="""
             {
                 "username": "johndoe",
                 "firstName": "john",
@@ -154,23 +195,32 @@ class TestAwsedClient:
                 "token": "abc123"
             }
             """,
-            )
+        )
 
-        form = ListEnrollmentsForm(courseSlugs=["ABC100", "ABC101"], username="johndoe", courseSlug=["ABC100"])
+        form = ListEnrollmentsForm(
+            courseSlugs=["ABC100", "ABC101"], username="johndoe", courseSlug=["ABC100"]
+        )
         enrollment_result = self.client.list_enrollments(form, "johndoe")
 
-        assert_that(enrollment_result, equal_to(EnvironmentEnrollmentResult(
-            enrollments=[EnvironmentEnrollmentResult(
-                username="johndoe",
-                firstName="john",
-                lastName="doe",
-                uid=12345,
-                token="abc123"
-            )]
-        )))
-    
+        assert_that(
+            enrollment_result,
+            equal_to(
+                EnvironmentEnrollmentResult(
+                    enrollments=[
+                        EnvironmentEnrollmentResult(
+                            username="johndoe",
+                            firstName="john",
+                            lastName="doe",
+                            uid=12345,
+                            token="abc123",
+                        )
+                    ]
+                )
+            ),
+        )
+
     def test_import_enrollments(self, requests_mock):
-        requests_mock.post('https://awsed.ucsd.edu/api/enrollments')
+        requests_mock.post("https://awsed.ucsd.edu/api/enrollments")
 
         csv_content = "username,firstName,lastName,uid\njohndoe,John,Doe,12345"
         result = self.client.import_enrollments(csv_content, dry_run=False)
@@ -178,7 +228,9 @@ class TestAwsedClient:
         assert_that(result, True)
 
     def test_list_pools_under_root(self, requests_mock):
-        requests_mock.get('https://awsed.ucsd.edu/api/pool-roots/pool_root', text="""
+        requests_mock.get(
+            "https://awsed.ucsd.edu/api/pool-roots/pool_root",
+            text="""
             {
                 "pools": [
                     {
@@ -191,75 +243,97 @@ class TestAwsedClient:
                     }
                 ]
             }
-            """)
+            """,
+        )
 
         pools_result = self.client.list_pools_under_root("pool_root")
 
-        assert_that(pools_result, equal_to(PoolsResult(
-            pools=[
-                PoolJson(
-                    name="Pool1",
-                    root="pool_root",
-                    predicate="predicate",
-                    ou="ou",
-                    courseName="ABC100",
-                    mode="mode"
+        assert_that(
+            pools_result,
+            equal_to(
+                PoolsResult(
+                    pools=[
+                        PoolJson(
+                            name="Pool1",
+                            root="pool_root",
+                            predicate="predicate",
+                            ou="ou",
+                            courseName="ABC100",
+                            mode="mode",
+                        )
+                    ]
                 )
-            ]
-        )))
+            ),
+        )
 
     def test_post_course_environment(self, requests_mock):
-        requests_mock.post('https://awsed.ucsd.edu/api/courses/ABC100/environments', text="""
+        requests_mock.post(
+            "https://awsed.ucsd.edu/api/courses/ABC100/environments",
+            text="""
             {
                 "name": "CourseEnv",
                 "environment": "env",
                 "status": "APPROVED",
                 "notes": "Test environment created successfully"
             }
-            """)
+            """,
+        )
 
         course_environment = AssociateCourseEnvironmentRequestBody(
             environment="env",
             status="APPROVED",
-            notes="Test environment created successfully"
+            notes="Test environment created successfully",
         )
         result = self.client.post_course_environment("ABC100", course_environment)
 
         assert_that(result, True)
 
     def test_get_course_environment(self, requests_mock):
-        requests_mock.get('https://awsed.ucsd.edu/api/courses/ABC100/environments/env', text="""
+        requests_mock.get(
+            "https://awsed.ucsd.edu/api/courses/ABC100/environments/env",
+            text="""
             {
                 "name": "CourseEnv",
                 "environment": "env",
                 "status": "APPROVED",
                 "notes": "Test environment"
             }
-            """)
+            """,
+        )
 
         course_environment = self.client.get_course_environment("ABC100", "env")
 
-        assert_that(course_environment, equal_to(CourseEnvironmentResult(
-            name="CourseEnv",
-            environment="env",
-            status="APPROVED",
-            notes="Test environment"
-        )))
-        
+        assert_that(
+            course_environment,
+            equal_to(
+                CourseEnvironmentResult(
+                    name="CourseEnv",
+                    environment="env",
+                    status="APPROVED",
+                    notes="Test environment",
+                )
+            ),
+        )
+
     def test_patch_course_environment(self, requests_mock):
         course = "ABC100"
         environment = "env1"
-        modification = ModifyCourseEnvironmentRequestBody(status="READY", notes="Updated notes")
-        
-        requests_mock.patch(f'https://awsed.ucsd.edu/api/courses/{course}/environments/{environment}')
-            
+        modification = ModifyCourseEnvironmentRequestBody(
+            status="READY", notes="Updated notes"
+        )
+
+        requests_mock.patch(
+            f"https://awsed.ucsd.edu/api/courses/{course}/environments/{environment}"
+        )
+
         result = self.client.patch_course_environment(course, environment, modification)
-        
+
         assert_that(result, True)
 
     def test_list_course_environments(self, requests_mock):
-        
-        requests_mock.get('https://awsed.ucsd.edu/api/course-environments', text="""
+        requests_mock.get(
+            "https://awsed.ucsd.edu/api/course-environments",
+            text="""
             {
                 "environments": [
                     {
@@ -274,33 +348,55 @@ class TestAwsedClient:
                     }
                 ]
             }
-            """)
-            
-        request = ListCourseEnvironmentsRequestBody(status="APPROVED", subject="CS", term="Fall", authentication=Authentication(username="jdoe", admin=False, ta=False, student=True))
+            """,
+        )
+
+        request = ListCourseEnvironmentsRequestBody(
+            status="APPROVED",
+            subject="CS",
+            term="Fall",
+            authentication=Authentication(
+                username="jdoe", admin=False, ta=False, student=True
+            ),
+        )
         result = self.client.list_course_environments(request)
-        
-        assert_that(result, equal_to(ListCourseEnvironmentsResultJson(
-            environments=[
-                ListCourseEnvironmentJson(environment="env1", status="APPROVED", notes="Environment 1"),
-                ListCourseEnvironmentJson(environment="env2", status="READY", notes="Environment 2")
-            ]
-        )))
+
+        assert_that(
+            result,
+            equal_to(
+                ListCourseEnvironmentsResultJson(
+                    environments=[
+                        ListCourseEnvironmentJson(
+                            environment="env1", status="APPROVED", notes="Environment 1"
+                        ),
+                        ListCourseEnvironmentJson(
+                            environment="env2", status="READY", notes="Environment 2"
+                        ),
+                    ]
+                )
+            ),
+        )
 
     def test_generate_aws_credentials(self, requests_mock):
         course = "ABC100"
         role = "instructor"
-        
-        requests_mock.post(f'https://awsed.ucsd.edu/api/courses/{course}/roles/{role}/credentials', text="generated_aws_credentials")
-            
+
+        requests_mock.post(
+            f"https://awsed.ucsd.edu/api/courses/{course}/roles/{role}/credentials",
+            text="generated_aws_credentials",
+        )
+
         result = self.client.generate_aws_credentials(course, role)
-        
+
         assert_that(result, equal_to(True))
 
     def test_list_courses(self, requests_mock):
         username = "johndoe"
         tag = "tag1"
-        
-        requests_mock.get('https://awsed.ucsd.edu/api/courses', text="""
+
+        requests_mock.get(
+            "https://awsed.ucsd.edu/api/courses",
+            text="""
             {
                 "courses": [
                     {
@@ -311,17 +407,23 @@ class TestAwsedClient:
                     }
                 ]
             }
-            """)
-            
+            """,
+        )
+
         result = self.client.list_courses(username, tag)
-        
-        assert_that(result, equal_to(ListCoursesResultJson(
-            courses=[
-                CourseJson(courseId="ABC100"),
-                CourseJson(courseId="ABC101")
-            ]
-        )))
-        
+
+        assert_that(
+            result,
+            equal_to(
+                ListCoursesResultJson(
+                    courses=[
+                        CourseJson(courseId="ABC100"),
+                        CourseJson(courseId="ABC101"),
+                    ]
+                )
+            ),
+        )
+
     def test_create_course(self, requests_mock):
         course_data = CourseRequestJson(
             name="CS101",
@@ -336,15 +438,18 @@ class TestAwsedClient:
             subject="Computer Science",
             courseNumber="101",
             instructor="John Doe",
-            instructorEmail="john@example.com"
+            instructorEmail="john@example.com",
         )
-        
-        requests_mock.post('https://awsed.ucsd.edu/api/courses', text="""
+
+        requests_mock.post(
+            "https://awsed.ucsd.edu/api/courses",
+            text="""
             "Course created successfully."
-            """)
-            
+            """,
+        )
+
         result = self.client.create_course(course_data)
-        
+
         assert_that(result, True)
 
     def test_list_course_launch_profiles(self, requests_mock):
@@ -365,7 +470,7 @@ class TestAwsedClient:
                                 "mountPropagation": "None",
                                 "subPath": "",
                                 "subPathExpr": "",
-                                "readOnly": True
+                                "readOnly": True,
                             }
                         ],
                         "volumes": [
@@ -377,18 +482,13 @@ class TestAwsedClient:
                                 "accessMode": "ReadWriteOnce",
                                 "pvcName": "nfs-pvc",
                                 "nfs": True,
-                                "hostPath": False
+                                "hostPath": False,
                             }
                         ],
                         "command": "app_command",
                         "args": ["arg1", "arg2"],
-                        "environment": [
-                            {
-                                "name": "env_var_1",
-                                "value": "env_value_1"
-                            }
-                        ],
-                        "extraYaml": "extra_yaml_content"
+                        "environment": [{"name": "env_var_1", "value": "env_value_1"}],
+                        "extraYaml": "extra_yaml_content",
                     },
                     "player": {
                         "name": "Player1",
@@ -396,64 +496,71 @@ class TestAwsedClient:
                         "maxCpu": 4,
                         "minMemory": 2048,
                         "maxMemory": 8192,
-                        "gpu": 1
-                    }
+                        "gpu": 1,
+                    },
                 }
             ]
         }
-        
-        requests_mock.get(f'https://awsed.ucsd.edu/api/courses/{course_slug}/launch-profiles', json=response_data)
-        
+
+        requests_mock.get(
+            f"https://awsed.ucsd.edu/api/courses/{course_slug}/launch-profiles",
+            json=response_data,
+        )
+
         result = self.client.list_course_launch_profiles(course_slug)
-        
-        expected_result = ListLaunchProfilesJson(launchProfiles=[
-            LaunchProfileJson(
-                name="ExampleLaunchProfile",
-                application=ApplicationJson(
-                    name="ExampleApp",
-                    image="app_image",
-                    description="App description",
-                    pullPolicy="Always",
-                    volumeMounts=[
-                        KubernetesVolumeMount(
-                            name="volume_mount_1",
-                            mountPath="/app/mount",
-                            mountPropagation="None",
-                            subPath="",
-                            subPathExpr="",
-                            readOnly=True
-                        )
-                    ],
-                    volumes=[
-                        KubernetesVolume(
-                            name="volume_1",
-                            type="nfs",
-                            server="nfs_server",
-                            path="/nfs_share",
-                            accessMode="ReadWriteOnce",
-                            pvcName="nfs-pvc",
-                            nfs=True,
-                            hostPath=False
-                        )
-                    ],
-                    command="app_command",
-                    args=["arg1", "arg2"],
-                    environment=[
-                        KubernetesEnvironmentVariable(name="env_var_1", value="env_value_1")
-                    ],
-                    extraYaml="extra_yaml_content"
-                ),
-                player=PlayerJson(
-                    name="Player1",
-                    minCpu=1,
-                    maxCpu=4,
-                    minMemory=2048,
-                    maxMemory=8192,
-                    gpu=1
+
+        expected_result = ListLaunchProfilesJson(
+            launchProfiles=[
+                LaunchProfileJson(
+                    name="ExampleLaunchProfile",
+                    application=ApplicationJson(
+                        name="ExampleApp",
+                        image="app_image",
+                        description="App description",
+                        pullPolicy="Always",
+                        volumeMounts=[
+                            KubernetesVolumeMount(
+                                name="volume_mount_1",
+                                mountPath="/app/mount",
+                                mountPropagation="None",
+                                subPath="",
+                                subPathExpr="",
+                                readOnly=True,
+                            )
+                        ],
+                        volumes=[
+                            KubernetesVolume(
+                                name="volume_1",
+                                type="nfs",
+                                server="nfs_server",
+                                path="/nfs_share",
+                                accessMode="ReadWriteOnce",
+                                pvcName="nfs-pvc",
+                                nfs=True,
+                                hostPath=False,
+                            )
+                        ],
+                        command="app_command",
+                        args=["arg1", "arg2"],
+                        environment=[
+                            KubernetesEnvironmentVariable(
+                                name="env_var_1", value="env_value_1"
+                            )
+                        ],
+                        extraYaml="extra_yaml_content",
+                    ),
+                    player=PlayerJson(
+                        name="Player1",
+                        minCpu=1,
+                        maxCpu=4,
+                        minMemory=2048,
+                        maxMemory=8192,
+                        gpu=1,
+                    ),
                 )
-            )
-        ])
-        
+            ]
+        )
+
         assert_that(result, equal_to(expected_result))
 
     def test_create_course_launch_profile(self, requests_mock):
@@ -462,13 +569,17 @@ class TestAwsedClient:
             launchProfileName="Profile1",
             courseName=course_slug,
             applicationName="App1",
-            playerName="Player1"
+            playerName="Player1",
         )
-        
-        requests_mock.post(f'https://awsed.ucsd.edu/api/courses/{course_slug}/launch-profiles')
-            
-        result = self.client.create_course_launch_profile(course_slug, launch_profile_data)
-        
+
+        requests_mock.post(
+            f"https://awsed.ucsd.edu/api/courses/{course_slug}/launch-profiles"
+        )
+
+        result = self.client.create_course_launch_profile(
+            course_slug, launch_profile_data
+        )
+
         assert_that(result, equal_to(True))
 
     def test_describe_course(self, requests_mock):
@@ -481,7 +592,7 @@ class TestAwsedClient:
                     "firstName": "John",
                     "lastName": "Doe",
                     "uid": 123,
-                    "role": "student"
+                    "role": "student",
                 }
             ],
             "courseId": "CS101",
@@ -491,7 +602,7 @@ class TestAwsedClient:
                 "rule": "rule1",
                 "ou": "ou1",
                 "courseName": "course1",
-                "mode": "mode1"
+                "mode": "mode1",
             },
             "active": True,
             "grader": {
@@ -499,12 +610,12 @@ class TestAwsedClient:
                 "firstName": "Grader",
                 "lastName": "Smith",
                 "uid": 456,
-                "role": "grader"
+                "role": "grader",
             },
             "fileSystem": {
                 "identifier": "fs1",
                 "server": "fs_server",
-                "path": "/fs_path"
+                "path": "/fs_path",
             },
             "snowTicket": "ST123",
             "quarter": "Q1",
@@ -512,13 +623,15 @@ class TestAwsedClient:
             "courseNumber": "101",
             "instructor": "Instructor",
             "instructorEmail": "instructor@example.com",
-            "courseName": "course1"
+            "courseName": "course1",
         }
-        
-        requests_mock.get(f'https://awsed.ucsd.edu/api/courses/{course_slug}', json=response_data)
-        
+
+        requests_mock.get(
+            f"https://awsed.ucsd.edu/api/courses/{course_slug}", json=response_data
+        )
+
         result = self.client.describe_course(course_slug)
-        
+
         expected_result = CourseResult(
             tags=["tag1", "tag2"],
             enrollments=[
@@ -527,7 +640,7 @@ class TestAwsedClient:
                     firstName="John",
                     lastName="Doe",
                     uid=123,
-                    role="student"
+                    role="student",
                 )
             ],
             courseId="CS101",
@@ -537,7 +650,7 @@ class TestAwsedClient:
                 rule="rule1",
                 ou="ou1",
                 courseName="course1",
-                mode="mode1"
+                mode="mode1",
             ),
             active=True,
             grader=UserResult(
@@ -545,12 +658,10 @@ class TestAwsedClient:
                 firstName="Grader",
                 lastName="Smith",
                 uid=456,
-                role="grader"
+                role="grader",
             ),
             fileSystem=FileSystemResult(
-                identifier="fs1",
-                server="fs_server",
-                path="/fs_path"
+                identifier="fs1", server="fs_server", path="/fs_path"
             ),
             snowTicket="ST123",
             quarter="Q1",
@@ -558,20 +669,19 @@ class TestAwsedClient:
             courseNumber="101",
             instructor="Instructor",
             instructorEmail="instructor@example.com",
-            courseName="course1"
+            courseName="course1",
         )
-        
+
         assert_that(result, equal_to(expected_result))
 
     def test_describe_course_error(self, requests_mock):
-        requests_mock.get('https://awsed.ucsd.edu/api/courses/mycourse', json={
-            "error": {
-                "message": "Course not found"
-                }
-            }, status_code=404)
+        requests_mock.get(
+            "https://awsed.ucsd.edu/api/courses/mycourse",
+            json={"error": {"message": "Course not found"}},
+            status_code=404,
+        )
 
         assert_that(lambda: self.client.describe_course("mycourse"), raises(HTTPError))
-
 
     def test_update_course(self, requests_mock):
         course_data = CourseRequestJson(
@@ -587,17 +697,19 @@ class TestAwsedClient:
             subject="CS",
             courseNumber="101",
             instructor="prof123",
-            instructorEmail="prof@example.com"
+            instructorEmail="prof@example.com",
         )
 
-        requests_mock.patch('https://awsed.ucsd.edu/api/courses/CS101')
-        
+        requests_mock.patch("https://awsed.ucsd.edu/api/courses/CS101")
+
         response_text = self.client.update_course("CS101", course_data)
-        
+
         assert_that(response_text, equal_to(True))
-    
+
     def test_describe_environment(self, requests_mock):
-        requests_mock.get('https://awsed.ucsd.edu/api/environments/env123', text="""
+        requests_mock.get(
+            "https://awsed.ucsd.edu/api/environments/env123",
+            text="""
             {
                 "volumes": [
                     {
@@ -610,24 +722,46 @@ class TestAwsedClient:
                     }
                 ]
             }
-            """)
-        
+            """,
+        )
+
         environment = self.client.list_enrollments_slug("env123")
-        
-        assert_that(environment, equal_to(EnvironmentJson(volumes=[
-            Volume(type="nfs", name="volume1", server="nfs-server", path="/data", accessMode="ReadWriteMany", pvcName="pvc123")
-        ])))
-    
+
+        assert_that(
+            environment,
+            equal_to(
+                EnvironmentJson(
+                    volumes=[
+                        Volume(
+                            type="nfs",
+                            name="volume1",
+                            server="nfs-server",
+                            path="/data",
+                            accessMode="ReadWriteMany",
+                            pvcName="pvc123",
+                        )
+                    ]
+                )
+            ),
+        )
+
     def test_upload_enrollments(self, requests_mock):
-        csv_content = "username,firstName,lastName,uid,role\njohndoe,John,Doe,101,Student"
-        requests_mock.post('https://awsed.ucsd.edu/api/enrollments', text="Enrollments uploaded successfully")
-        
+        csv_content = (
+            "username,firstName,lastName,uid,role\njohndoe,John,Doe,101,Student"
+        )
+        requests_mock.post(
+            "https://awsed.ucsd.edu/api/enrollments",
+            text="Enrollments uploaded successfully",
+        )
+
         response_text = self.client.upload_enrollments(csv_content, dry_run=False)
-        
+
         assert_that(response_text, equal_to(True))
-    
+
     def test_list_enrollments_for_environment_roster(self, requests_mock):
-        requests_mock.get('https://awsed.ucsd.edu/api/environments/env123/roster', text="""
+        requests_mock.get(
+            "https://awsed.ucsd.edu/api/environments/env123/roster",
+            text="""
             {
                 "username": "johndoe",
                 "firstName": "John",
@@ -635,20 +769,28 @@ class TestAwsedClient:
                 "uid": 101,
                 "token": "token123"
             }
-            """)
-        
+            """,
+        )
+
         enrollment_result = self.client.list_enrollments_roster("env123")
-        
-        assert_that(enrollment_result, equal_to(EnvironmentEnrollmentResult(
-            username="johndoe",
-            firstName="John",
-            lastName="Doe",
-            uid=101,
-            token="token123"
-        )))
-        
+
+        assert_that(
+            enrollment_result,
+            equal_to(
+                EnvironmentEnrollmentResult(
+                    username="johndoe",
+                    firstName="John",
+                    lastName="Doe",
+                    uid=101,
+                    token="token123",
+                )
+            ),
+        )
+
     def test_list_teams(self, requests_mock):
-        requests_mock.get('https://awsed.ucsd.edu/api/courses/ABC101/teams', text="""
+        requests_mock.get(
+            "https://awsed.ucsd.edu/api/courses/ABC101/teams",
+            text="""
             {
                 "teams": [
                     {
@@ -709,7 +851,8 @@ class TestAwsedClient:
                     }
                 ]
             }
-        """)
+        """,
+        )
 
         teams_result = self.client.list_course_teams("ABC101")
 
@@ -727,7 +870,7 @@ class TestAwsedClient:
                             firstName="John",
                             lastName="Doe",
                             uid=456,
-                            role="student"
+                            role="student",
                         )
                     ],
                     course=CourseResult(
@@ -738,7 +881,7 @@ class TestAwsedClient:
                                 firstName="John",
                                 lastName="Doe",
                                 uid=456,
-                                role="student"
+                                role="student",
                             )
                         ],
                         courseId="CS101",
@@ -748,7 +891,7 @@ class TestAwsedClient:
                             rule="rule1",
                             ou="ou1",
                             courseName="Computer Science",
-                            mode="mode1"
+                            mode="mode1",
                         ),
                         active=True,
                         grader=UserResult(
@@ -756,12 +899,10 @@ class TestAwsedClient:
                             firstName="Alice",
                             lastName="Smith",
                             uid=789,
-                            role="instructor"
+                            role="instructor",
                         ),
                         fileSystem=FileSystemResult(
-                            identifier="fs1",
-                            server="server1",
-                            path="/path/to/files"
+                            identifier="fs1", server="server1", path="/path/to/files"
                         ),
                         snowTicket="ticket123",
                         quarter="Fall",
@@ -769,11 +910,21 @@ class TestAwsedClient:
                         courseNumber="101",
                         instructor="instructor1",
                         instructorEmail="instructor1@example.com",
-                        courseName="Intro to CS"
-                    )
+                        courseName="Intro to CS",
+                    ),
                 )
             ]
         )
 
         assert_that(teams_result, equal_to(expected_teams_result))
-            
+
+    def test_timeout_handling(self, mocker):
+        import requests
+
+        mock = mocker.patch.object(requests, "get")
+        mock.side_effect = requests.exceptions.Timeout
+
+        assert_that(
+            lambda: self.client.describe_user("johndoe"),
+            raises(requests.exceptions.Timeout),
+        )
