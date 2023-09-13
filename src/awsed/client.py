@@ -25,24 +25,29 @@ class DefaultAwsedClient(AbstractAwsedClient):
         )
 
     def list_enrollments(
-        self, form: ListEnrollmentsForm, username: Optional[str] = None
+        self, form: Optional[ListEnrollmentsForm] = None, username: Optional[str] = None
     ) -> EnvironmentEnrollmentResult:
-        params = {"form": form}
-        if username:
-            params["username"] = username
-        return EnvironmentEnrollmentResult(
-            self.list_of_dataclass_request(
-                EnrollmentResult, "/enrollments", params=params
+        if form is not None and username is None:
+            params = {"form": form}
+            return EnvironmentEnrollmentResult(
+                enrollments=self.list_of_dataclass_request(
+                    EnrollmentResult, "/enrollments", params=params
+                )
             )
-        )
+        elif form is None and username is not None:
+            params = {"username": username}
+            return self.list_of_dataclass_request(
+                EnrollmentJson, "/enrollments", params=params
+            )
+        else:
+            raise ValueError("Must specify exactly one of form or username")
 
-    def list_enrollments(self, username: Optional[str]) -> EnvironmentEnrollmentResult:
-        params = {"username": username}
-        return EnvironmentEnrollmentResult(
-            self.list_of_dataclass_request(
-                EnrollmentResult, "/enrollments", params=params
-            )
-        )
+        # params = {"form": form}
+        # return EnvironmentEnrollmentResult(
+        #     self.list_of_dataclass_request(
+        #         EnrollmentResult, "/enrollments", params=params
+        #     )
+        # )
 
     def import_enrollments(self, csv_content: str, dry_run: bool = False) -> str:
         url = "/enrollments"

@@ -347,3 +347,9 @@ class ListCourseEnvironmentJson:
 @dataclass
 class ListCourseEnvironmentsResultJson:
     environments: List[ListCourseEnvironmentJson]
+
+
+@dataclass
+class EnrollmentJson:
+    username: str
+    course: str

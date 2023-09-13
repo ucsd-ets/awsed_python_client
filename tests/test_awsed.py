@@ -187,27 +187,29 @@ class TestAwsedClient:
         requests_mock.get(
             "https://awsed.ucsd.edu/api/enrollments",
             text="""
-            {
-                "username": "johndoe",
-                "firstName": "john",
-                "lastName": "doe",
-                "uid": 12345,
-                "token": "abc123"
-            }
+                [
+                    {
+                        "username": "johndoe",
+                        "firstName": "john",
+                        "lastName": "doe",
+                        "uid": 12345,
+                        "token": "abc123"
+                    }
+                ]
             """,
         )
 
         form = ListEnrollmentsForm(
             courseSlugs=["ABC100", "ABC101"], username="johndoe", courseSlug=["ABC100"]
         )
-        enrollment_result = self.client.list_enrollments(form, "johndoe")
+        enrollment_result = self.client.list_enrollments(form=form)
 
         assert_that(
             enrollment_result,
             equal_to(
                 EnvironmentEnrollmentResult(
                     enrollments=[
-                        EnvironmentEnrollmentResult(
+                        EnrollmentResult(
                             username="johndoe",
                             firstName="john",
                             lastName="doe",
@@ -222,37 +224,33 @@ class TestAwsedClient:
     def test_list_enrollments_for_user(self, requests_mock):
         # TODO: Learn about Rest object parameters
         requests_mock.get(
-            "https://awsed.ucsd.edu/api/enrollments",
+            "https://awsed.ucsd.edu/api/enrollments?username=johndoe",
             text="""
-            {
-                "username": "johndoe",
-                "firstName": "john",
-                "lastName": "doe",
-                "uid": 12345,
-                "token": "abc123"
-            }
+                [
+                    {
+                        "username": "johndoe",
+                        "course": "ABC100"
+                    },
+                    {
+                        "username": "johndoe",
+                        "course": "ABC101"
+                    }
+                ]
             """,
         )
 
         form = ListEnrollmentsForm(
             courseSlugs=["ABC100", "ABC101"], username="johndoe", courseSlug=["ABC100"]
         )
-        enrollment_result = self.client.list_enrollments(form, "johndoe")
+        enrollment_result = self.client.list_enrollments(username="johndoe")
 
         assert_that(
             enrollment_result,
             equal_to(
-                EnvironmentEnrollmentResult(
-                    enrollments=[
-                        EnvironmentEnrollmentResult(
-                            username="johndoe",
-                            firstName="john",
-                            lastName="doe",
-                            uid=12345,
-                            token="abc123",
-                        )
-                    ]
-                )
+                [
+                    EnrollmentJson(username="johndoe", course="ABC100"),
+                    EnrollmentJson(username="johndoe", course="ABC101"),
+                ]
             ),
         )
 
