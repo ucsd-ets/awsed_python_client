@@ -1,3 +1,21 @@
+[project]
+name = "awsed_client"
+version = "0.1.0"
+authors = [
+    {name = "UC San Diego Information Technology Services - Academic Technology Services", email = "datahub@ucsd.edu"}
+]
+description = "Python for awsed.ucsd.edu"
+readme = "README.md"
+keywords = ["awsed"]
+
+dependencies = [
+    'dacite',
+    'requests',
+    'pyhamcrest',
+    'requests_mock'
+]
+
+
 [tool.pytest.ini_options]
 pythonpath = [
     "src",

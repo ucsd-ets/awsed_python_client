@@ -36,6 +36,14 @@ class DefaultAwsedClient(AbstractAwsedClient):
             )
         )
 
+    def list_enrollments(self, username: Optional[str]) -> EnvironmentEnrollmentResult:
+        params = {"username": username}
+        return EnvironmentEnrollmentResult(
+            self.list_of_dataclass_request(
+                EnrollmentResult, "/enrollments", params=params
+            )
+        )
+
     def import_enrollments(self, csv_content: str, dry_run: bool = False) -> str:
         url = "/enrollments"
         params = {"dryRun": dry_run}
@@ -273,9 +281,10 @@ class DefaultAwsedClient(AbstractAwsedClient):
         except requests.exceptions.HTTPError as e:
             if result.status_code >= 400 and result.status_code < 500:
                 print("Error with the call: " + str(e))
+                raise Exception("Exited with the error!")
             else:
                 print("Error with the server: " + str(e))
-            raise Exception("Exited with the error!")
+                raise Exception("Exited with the error!")
 
     def auth(self):
         headers = {"Authorization": "AWSEd api_key=" + self.awsed_api_key}
