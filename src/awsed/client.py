@@ -1,6 +1,7 @@
 import json
 import os
 import sys
+from typing import Any
 
 import requests
 from requests.exceptions import HTTPError
@@ -13,6 +14,10 @@ from awsed.abstract_client import AbstractAwsedClient
 class DefaultAwsedClient(AbstractAwsedClient):
     def describe_user(self, username: str) -> UserResultJson:
         return self.dataclass_request(UserResultJson, f"/users/{username}")
+
+    def patch_user(self, username: str, user: UserRequestJson) -> UserResultJson:
+        result = self.patch_request(f"/users/{username}", data=user)
+        return True
 
     def list_user_launch_profiles(self, username: str) -> UserLaunchProfilesResult:
         return self.dataclass_request(
@@ -168,7 +173,6 @@ class DefaultAwsedClient(AbstractAwsedClient):
     def dataclass_request(
         self, data_class, url, params=None, noneIfNotFound=True, assertNotNone=False
     ):
-    
         result = self.get_request(url, params)
 
         self.check_error(result)
@@ -180,8 +184,12 @@ class DefaultAwsedClient(AbstractAwsedClient):
         if missing and noneIfNotFound:
             return None
 
-        # May throw a DaciteError
-        return from_dict(data_class=data_class, data=result.json())
+        # May throw a DaciteError or a JsonError
+        try:
+            return from_dict(data_class=data_class, data=result.json())
+        except Exception as e:
+            print(f"Error parsing {url} with data class {data_class}")
+            raise e
 
     def list_of_dataclass_request(
         self, data_class, url, params=None, noneIfNotFound=True, assertNotNone=False
@@ -240,16 +248,18 @@ class DefaultAwsedClient(AbstractAwsedClient):
         return result
 
     def patch_request(
-        self, url: str, params: dict = None, headers: dict = None, data: str = None
+        self, url: str, params: dict = None, headers: dict = None, data: Any = None
     ) -> requests.Response:
         full_url = self.endpoint + url
         headers = headers or self.auth()
+
+        data_json = json.dumps(data, default=lambda o: o.__dict__)
 
         result = requests.patch(
             full_url,
             headers=headers,
             params=params,
-            data=data,
+            data=data_json,
             timeout=self.global_timeout,
         )
 
@@ -262,11 +272,10 @@ class DefaultAwsedClient(AbstractAwsedClient):
             result.raise_for_status()
         except requests.exceptions.HTTPError as e:
             if result.status_code >= 400 and result.status_code < 500:
-                print("Error with the call: "+ str(e))
-            else: 
+                print("Error with the call: " + str(e))
+            else:
                 print("Error with the server: " + str(e))
             raise Exception("Exited with the error!")
-
 
     def auth(self):
         headers = {"Authorization": "AWSEd api_key=" + self.awsed_api_key}

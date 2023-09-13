@@ -219,6 +219,43 @@ class TestAwsedClient:
             ),
         )
 
+    def test_list_enrollments_for_user(self, requests_mock):
+        # TODO: Learn about Rest object parameters
+        requests_mock.get(
+            "https://awsed.ucsd.edu/api/enrollments",
+            text="""
+            {
+                "username": "johndoe",
+                "firstName": "john",
+                "lastName": "doe",
+                "uid": 12345,
+                "token": "abc123"
+            }
+            """,
+        )
+
+        form = ListEnrollmentsForm(
+            courseSlugs=["ABC100", "ABC101"], username="johndoe", courseSlug=["ABC100"]
+        )
+        enrollment_result = self.client.list_enrollments(form, "johndoe")
+
+        assert_that(
+            enrollment_result,
+            equal_to(
+                EnvironmentEnrollmentResult(
+                    enrollments=[
+                        EnvironmentEnrollmentResult(
+                            username="johndoe",
+                            firstName="john",
+                            lastName="doe",
+                            uid=12345,
+                            token="abc123",
+                        )
+                    ]
+                )
+            ),
+        )
+
     def test_import_enrollments(self, requests_mock):
         requests_mock.post("https://awsed.ucsd.edu/api/enrollments")
 
@@ -928,3 +965,5 @@ class TestAwsedClient:
             lambda: self.client.describe_user("johndoe"),
             raises(requests.exceptions.Timeout),
         )
+
+    # def test_patch_user(self):

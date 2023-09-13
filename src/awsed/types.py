@@ -20,6 +20,7 @@ from typing import List, Optional
 # class ApiErrorResult:
 #     error: ApiError
 
+
 @dataclass
 class CourseRequestJson:
     name: str
@@ -36,6 +37,7 @@ class CourseRequestJson:
     instructor: str
     instructorEmail: str
 
+
 @dataclass
 class LaunchProfileRequestJson:
     launchProfileName: str
@@ -43,21 +45,25 @@ class LaunchProfileRequestJson:
     applicationName: str
     playerName: str
 
+
 @dataclass
 class AssociateCourseEnvironmentRequestBody:
     environment: str
     status: str
     notes: str
 
+
 @dataclass
 class Args:
     course: str
     role: str
 
+
 @dataclass
 class ModifyCourseEnvironmentRequestBody:
     status: str
     notes: str
+
 
 @dataclass
 class UserResultJson:
@@ -66,7 +72,37 @@ class UserResultJson:
     lastName: str
     uid: int
     enrollments: List[str]
-    
+
+
+@dataclass
+class UserRequestJson:
+    username: str
+    firstName: Optional[str]
+    lastName: Optional[str]
+    roles: Optional[List[str]]
+    apiKey: Optional[str]
+    uid: int
+    homeFileSystem: Optional[str]
+
+    def __init__(
+        self,
+        username=None,
+        firstName=None,
+        lastName=None,
+        roles=None,
+        apiKey=None,
+        uid=None,
+        homeFileSystem=None,
+    ):
+        self.username = username
+        self.firstName = firstName
+        self.lastName = lastName
+        self.roles = roles
+        self.apiKey = apiKey
+        self.uid = uid
+        self.homeFileSystem = homeFileSystem
+
+
 @dataclass
 class UserResult:
     username: str
@@ -75,10 +111,12 @@ class UserResult:
     uid: int
     role: Optional[str]
 
+
 @dataclass
 class KubernetesEnvironmentVariable:
     name: str
     value: str
+
 
 @dataclass
 class KubernetesVolume:
@@ -91,6 +129,7 @@ class KubernetesVolume:
     nfs: bool
     hostPath: bool
 
+
 @dataclass
 class KubernetesVolumeMount:
     name: str
@@ -99,6 +138,7 @@ class KubernetesVolumeMount:
     subPath: str
     subPathExpr: str
     readOnly: bool
+
 
 @dataclass
 class ApplicationJson:
@@ -113,6 +153,7 @@ class ApplicationJson:
     environment: List[KubernetesEnvironmentVariable]
     extraYaml: str
 
+
 @dataclass
 class PlayerJson:
     name: str
@@ -122,6 +163,7 @@ class PlayerJson:
     maxMemory: int
     gpu: int
 
+
 @dataclass
 class UserLaunchProfileJson:
     name: str
@@ -129,15 +171,18 @@ class UserLaunchProfileJson:
     player: PlayerJson
     course: str
 
+
 @dataclass
 class UserLaunchProfilesResult:
     launchProfiles: List[UserLaunchProfileJson]
+
 
 @dataclass
 class FileSystemResult:
     identifier: str
     server: str
     path: str
+
 
 @dataclass
 class ImmutablePool:
@@ -147,6 +192,7 @@ class ImmutablePool:
     ou: str
     courseName: str
     mode: str
+
 
 @dataclass
 class CourseResult:
@@ -165,9 +211,11 @@ class CourseResult:
     instructorEmail: Optional[str]
     courseName: Optional[str]
 
+
 @dataclass
 class CourseJson:
     courseId: str
+
 
 @dataclass
 class TeamResult:
@@ -178,9 +226,11 @@ class TeamResult:
     members: Optional[List[UserResult]]
     course: Optional[CourseResult]
 
+
 @dataclass
 class TeamsResult:
     teams: List[TeamResult]
+
 
 @dataclass
 class PoolAccountJson:
@@ -189,9 +239,11 @@ class PoolAccountJson:
     username: str
     teamName: str
 
+
 @dataclass
 class PoolAccountResult:
     accounts: List[PoolAccountJson]
+
 
 @dataclass
 class PoolJson:
@@ -202,9 +254,11 @@ class PoolJson:
     courseName: str
     mode: str
 
+
 @dataclass
 class PoolsResult:
     pools: List[PoolJson]
+
 
 @dataclass
 class Volume:
@@ -215,9 +269,11 @@ class Volume:
     accessMode: str
     pvcName: str
 
+
 @dataclass
 class EnvironmentJson:
     volumes: List[Volume]
+
 
 @dataclass
 class EnrollmentResult:
@@ -227,9 +283,11 @@ class EnrollmentResult:
     uid: int
     token: Optional[str]
 
+
 @dataclass
 class EnvironmentEnrollmentResult:
     enrollments: Optional[List[EnrollmentResult]]
+
 
 @dataclass
 class ListEnrollmentsForm:
@@ -237,9 +295,11 @@ class ListEnrollmentsForm:
     username: str
     courseSlug: List[str]
 
+
 @dataclass
 class ListCoursesResultJson:
     courses: List[CourseJson]
+
 
 @dataclass
 class LaunchProfileJson:
@@ -247,9 +307,11 @@ class LaunchProfileJson:
     application: ApplicationJson
     player: PlayerJson
 
+
 @dataclass
 class ListLaunchProfilesJson:
     launchProfiles: List[LaunchProfileJson]
+
 
 @dataclass
 class CourseEnvironmentResult:
@@ -258,12 +320,14 @@ class CourseEnvironmentResult:
     status: str
     notes: str
 
+
 @dataclass
 class Authentication:
     username: str
     admin: bool
     ta: bool
     student: bool
+
 
 @dataclass
 class ListCourseEnvironmentsRequestBody:
@@ -272,11 +336,13 @@ class ListCourseEnvironmentsRequestBody:
     term: str
     authentication: Authentication
 
+
 @dataclass
 class ListCourseEnvironmentJson:
     environment: str
     status: str
     notes: str
+
 
 @dataclass
 class ListCourseEnvironmentsResultJson:
