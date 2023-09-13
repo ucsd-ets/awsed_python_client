@@ -30,6 +30,16 @@ class DefaultAwsedClient(AbstractAwsedClient):
                 EnrollmentResult, "/enrollments", params=params
             )
         )
+    
+    def list_enrollments(
+        self, username: Optional[str]
+    ) -> EnvironmentEnrollmentResult:
+        params = {"username": username}
+        return EnvironmentEnrollmentResult(
+            self.list_of_dataclass_request(
+                EnrollmentResult, "/enrollments", params=params
+            )
+        )
 
     def import_enrollments(self, csv_content: str, dry_run: bool = False) -> str:
         url = "/enrollments"
