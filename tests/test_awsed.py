@@ -797,13 +797,15 @@ class TestAwsedClient:
         requests_mock.get(
             "https://awsed.ucsd.edu/api/environments/env123/roster",
             text="""
-            {
-                "username": "johndoe",
-                "firstName": "John",
-                "lastName": "Doe",
-                "uid": 101,
-                "token": "token123"
-            }
+            [
+                {
+                    "username": "johndoe",
+                    "firstName": "John",
+                    "lastName": "Doe",
+                    "uid": 101,
+                    "token": "token123"
+                }
+            ]
             """,
         )
 
@@ -813,11 +815,15 @@ class TestAwsedClient:
             enrollment_result,
             equal_to(
                 EnvironmentEnrollmentResult(
-                    username="johndoe",
-                    firstName="John",
-                    lastName="Doe",
-                    uid=101,
-                    token="token123",
+                    [
+                        EnrollmentResult(
+                            username="johndoe",
+                            firstName="John",
+                            lastName="Doe",
+                            uid=101,
+                            token="token123",
+                        )
+                    ]
                 )
             ),
         )
