@@ -71,6 +71,7 @@ class UserResultJson:
     firstName: str
     lastName: str
     uid: int
+    homeFileSystem: str
     enrollments: List[str]
 
 
