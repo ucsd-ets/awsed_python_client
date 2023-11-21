@@ -183,6 +183,12 @@ class FileSystemResult:
     identifier: str
     server: str
     path: str
+    type: str
+
+
+@dataclass
+class ListFileSystemsResultJson:
+    fileSystems: List[FileSystemResult]
 
 
 @dataclass

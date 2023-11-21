@@ -33,6 +33,7 @@ class TestAwsedClient:
                 "firstName": "john",
                 "lastName": "doe",
                 "uid": 12345,
+                "homeFileSystem": "fs01",
                 "enrollments": [
                     "ABC100",
                     "ABC101"
@@ -47,6 +48,7 @@ class TestAwsedClient:
             firstName="john",
             lastName="doe",
             uid=12345,
+            homeFileSystem="fs01",
             enrollments=["ABC100", "ABC101"],
         )
 
@@ -424,6 +426,80 @@ class TestAwsedClient:
         result = self.client.generate_aws_credentials(course, role)
 
         assert_that(result, equal_to(True))
+
+    def test_list_file_systems(self, requests_mock):
+        requests_mock.get(
+            "https://awsed.ucsd.edu/api/file-systems",
+            text="""
+            {
+                "fileSystems": [
+                    {
+                        "identifier": "fs01",
+                        "server": "fs01.example.com",
+                        "path": "fs01path",
+                        "type": "home"
+                    },
+                    {
+                        "identifier": "fs02",
+                        "server": "fs02.example.com",
+                        "path": "fs02path",
+                        "type": "workspace"
+                    }
+                ]
+            }
+            """,
+        )
+
+        result = self.client.list_file_systems()
+
+        assert_that(
+            result,
+            equal_to(
+                ListFileSystemsResultJson(
+                    fileSystems=[
+                        FileSystemResult(
+                            identifier="fs01",
+                            server="fs01.example.com",
+                            path="fs01path",
+                            type="home",
+                        ),
+                        FileSystemResult(
+                            identifier="fs02",
+                            server="fs02.example.com",
+                            path="fs02path",
+                            type="workspace",
+                        ),
+                    ]
+                )
+            ),
+        )
+
+    def test_describe_file_system(self, requests_mock):
+        requests_mock.get(
+            "https://awsed.ucsd.edu/api/file-systems/fs01",
+            text="""
+            {
+                "identifier": "fs01",
+                "server": "fs01.example.com",
+                "path": "fs01path",
+                "type": "home"
+            }
+            """,
+        )
+
+        result = self.client.describe_file_system("fs01")
+
+        assert_that(
+            result,
+            equal_to(
+                FileSystemResult(
+                    identifier="fs01",
+                    server="fs01.example.com",
+                    path="fs01path",
+                    type="home",
+                )
+            ),
+        )
 
     def test_list_courses(self, requests_mock):
         username = "johndoe"

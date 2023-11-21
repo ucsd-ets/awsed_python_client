@@ -22,6 +22,9 @@
             "name": "/pool-roots"
         },
         {
+            "name": "/file-systems"
+        },
+        {
             "name": "/course-environments",
             "description": "Course Environments API"
         },
@@ -159,6 +162,111 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ApiErrorResult"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/file-systems": {
+            "get": {
+                "tags": [
+                    "/file-systems"
+                ],
+                "summary": "List file systems",
+                "operationId": "listFileSystems",
+                "parameters": [],
+                "responses": {
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResult"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResult"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ListFileSystemsResultJson"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/file-systems/{fileSystem}": {
+            "get": {
+                "tags": [
+                    "/file-systems"
+                ],
+                "summary": "Describe a file system",
+                "operationId": "describeFileSystem",
+                "parameters": [
+                    {
+                        "name": "fileSystem",
+                        "in": "path",
+                        "description": "File System Name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "fs01-home"
+                    }
+                ],
+                "responses": {
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResult"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResult"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResult"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FileSystemResult"
                                 }
                             }
                         }
@@ -1765,6 +1873,20 @@
                     },
                     "path": {
                         "type": "string"
+                    },
+                    "type": {
+                        "type": "string"
+                    }
+                }
+            },
+            "ListFileSystemsResultJson": {
+                "type": "object",
+                "properties": {
+                    "fileSystems": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/FileSystemResult"
+                        }
                     }
                 }
             },

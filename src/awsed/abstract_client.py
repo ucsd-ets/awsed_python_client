@@ -151,6 +151,30 @@ class AbstractAwsedClient(ABC):
         pass
 
     @abstractmethod
+    def list_file_systems(self) -> Any:
+        """
+        Lists the file systems.
+
+        Returns:
+            A list or an object containing the details of the file systems.
+        """
+        pass
+
+    @abstractmethod
+    def describe_file_system(self, file_system: str) -> Any:
+        """
+        Provides a detailed description of the specified file system.
+
+        Args:
+          file_system (str): The name or identifier of the file system.
+
+        Returns:
+          Any: An object or data structure containing details of the file system.
+        """
+
+        pass
+
+    @abstractmethod
     def list_courses(self, username: str = None, tag: str = None) -> Any:
         """
         Lists the courses based on the given filters.
