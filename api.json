@@ -1,2253 +1,2435 @@
 {
     "openapi": "3.0.1",
     "info": {
-        "title": "AWSEd API",
-        "description": "API for AWS Educate",
-        "version": "2023.3.3-RC39"
+      "title": "AWSEd API",
+      "description": "API for AWS Educate",
+      "version": "2023.5.2-RC1"
     },
     "servers": [
-        {
-            "url": "http://awsed-dev.ucsd.edu",
-            "description": "Generated server url"
-        }
+      {
+        "url": "http://awsed-dev.ucsd.edu",
+        "description": "Generated server url"
+      }
     ],
     "tags": [
-        {
-            "name": "/users"
-        },
-        {
-            "name": "/enrollments"
-        },
-        {
-            "name": "/pool-roots"
-        },
-        {
-            "name": "/file-systems"
-        },
-        {
-            "name": "/course-environments",
-            "description": "Course Environments API"
-        },
-        {
-            "name": "/users",
-            "description": "User launch profiles"
-        },
-        {
-            "name": "/aws-credentials",
-            "description": "AWS credentials"
-        },
-        {
-            "name": "/courses",
-            "description": "Course API"
-        },
-        {
-            "name": "/environments"
-        },
-        {
-            "name": "/pools"
-        },
-        {
-            "name": "/teams"
-        }
+      {
+        "name": "/users"
+      },
+      {
+        "name": "/enrollments"
+      },
+      {
+        "name": "/pool-roots"
+      },
+      {
+        "name": "/file-systems"
+      },
+      {
+        "name": "/course-environments",
+        "description": "Course Environments API"
+      },
+      {
+        "name": "/users",
+        "description": "User launch profiles"
+      },
+      {
+        "name": "/aws-credentials",
+        "description": "AWS credentials"
+      },
+      {
+        "name": "/courses",
+        "description": "Course API"
+      },
+      {
+        "name": "/environments"
+      },
+      {
+        "name": "/pools"
+      },
+      {
+        "name": "/teams"
+      }
     ],
     "paths": {
-        "/api/enrollments": {
-            "get": {
-                "tags": [
-                    "/environments",
-                    "/enrollments"
-                ],
-                "summary": "List enrollments for environment",
-                "operationId": "listEnrollments_1",
-                "parameters": [
-                    {
-                        "name": "form",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/components/schemas/ListEnrollmentsForm"
-                        }
-                    },
-                    {
-                        "name": "username",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    },
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/EnvironmentEnrollmentResult"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    }
-                }
+      "/api/enrollments": {
+        "get": {
+          "tags": [
+            "/environments",
+            "/enrollments"
+          ],
+          "summary": "List enrollments for environment",
+          "operationId": "listEnrollments_1",
+          "parameters": [
+            {
+              "name": "form",
+              "in": "query",
+              "required": true,
+              "schema": {
+                "$ref": "#/components/schemas/ListEnrollmentsForm"
+              }
             },
-            "post": {
-                "tags": [
-                    "/enrollments"
-                ],
-                "summary": "importEnrollments",
-                "operationId": "uploadEnrollments",
-                "parameters": [
-                    {
-                        "name": "dryRun",
-                        "in": "query",
-                        "description": "dryRun",
-                        "required": false,
-                        "schema": {
-                            "type": "boolean",
-                            "default": false
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "content": {
-                        "text/plain": {
-                            "schema": {
-                                "type": "string",
-                                "description": "CSV"
-                            }
-                        }
-                    },
-                    "required": true
-                },
-                "responses": {
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    },
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "text/html": {}
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    }
-                }
+            {
+              "name": "username",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "string"
+              }
             }
-        },
-        "/api/file-systems": {
-            "get": {
-                "tags": [
-                    "/file-systems"
-                ],
-                "summary": "List file systems",
-                "operationId": "listFileSystems",
-                "parameters": [],
-                "responses": {
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    },
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ListFileSystemsResultJson"
-                                }
-                            }
-                        }
-                    }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/EnvironmentEnrollmentResult"
+                  }
                 }
-            }
-        },
-        "/api/file-systems/{fileSystem}": {
-            "get": {
-                "tags": [
-                    "/file-systems"
-                ],
-                "summary": "Describe a file system",
-                "operationId": "describeFileSystem",
-                "parameters": [
-                    {
-                        "name": "fileSystem",
-                        "in": "path",
-                        "description": "File System Name",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "fs01-home"
-                    }
-                ],
-                "responses": {
-                    "404": {
-                        "description": "Not Found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    },
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/FileSystemResult"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/courses": {
-            "get": {
-                "tags": [
-                    "/courses"
-                ],
-                "summary": "List active courses",
-                "operationId": "listCourses",
-                "parameters": [
-                    {
-                        "name": "username",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "tag",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    },
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ListCoursesResultJson"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    }
-                }
+              }
             },
-            "post": {
-                "tags": [
-                    "/courses"
-                ],
-                "summary": "Create a course",
-                "operationId": "createCourse",
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/CourseRequestJson"
-                            }
-                        }
-                    },
-                    "required": true
-                },
-                "responses": {
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    },
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "text/html": {}
-                        }
-                    },
-                    "409": {
-                        "description": "Conflict",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    }
+            "401": {
+              "description": "Unauthorized",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
                 }
-            }
-        },
-        "/api/courses/{course}/launch-profiles": {
-            "get": {
-                "tags": [
-                    "/courses"
-                ],
-                "summary": "List launch profiles for a course",
-                "operationId": "listCourseLaunchProfiles",
-                "parameters": [
-                    {
-                        "name": "course",
-                        "in": "path",
-                        "description": "Course Name",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "CSE100_WI20_A00"
-                    }
-                ],
-                "responses": {
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    },
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ListLaunchProfilesJson"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    }
-                }
+              }
             },
-            "post": {
-                "tags": [
-                    "/courses"
-                ],
-                "summary": "Create a launch profile for a course",
-                "operationId": "createCourseLaunchProfile",
-                "parameters": [
-                    {
-                        "name": "course",
-                        "in": "path",
-                        "description": "Course name",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "CSE100_WI20_A00"
-                    }
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/LaunchProfileRequestJson"
-                            }
-                        }
-                    },
-                    "required": true
-                },
-                "responses": {
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    },
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "text/html": {}
-                        }
-                    },
-                    "409": {
-                        "description": "Conflict",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    }
+            "403": {
+              "description": "Forbidden",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
                 }
+              }
             }
+          }
         },
-        "/api/courses/{course}/environments": {
-            "post": {
-                "tags": [
-                    "/course-environments"
-                ],
-                "summary": "Associate a course with an environment",
-                "operationId": "associateCourseEnvironment",
-                "parameters": [
-                    {
-                        "name": "course",
-                        "in": "path",
-                        "description": "Course Name",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "CSE100_WI20_A00"
-                    }
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/AssociateCourseEnvironmentRequestBody"
-                            }
-                        }
-                    },
-                    "required": true
-                },
-                "responses": {
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    },
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "text/html": {}
-                        }
-                    },
-                    "409": {
-                        "description": "Conflict",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    }
-                }
+        "post": {
+          "tags": [
+            "/enrollments"
+          ],
+          "summary": "importEnrollments",
+          "operationId": "uploadEnrollments",
+          "parameters": [
+            {
+              "name": "dryRun",
+              "in": "query",
+              "description": "dryRun",
+              "required": false,
+              "schema": {
+                "type": "boolean",
+                "default": false
+              }
             }
-        },
-        "/api/aws-credentials": {
-            "post": {
-                "tags": [
-                    "/aws-credentials"
-                ],
-                "summary": "Generate AWS credentials",
-                "operationId": "xyz",
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/Args"
-                            }
-                        }
-                    },
-                    "required": true
-                },
-                "responses": {
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    },
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "text/html": {}
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    }
+          ],
+          "requestBody": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string",
+                  "description": "CSV"
                 }
-            }
-        },
-        "/api/courses/{course}": {
-            "get": {
-                "tags": [
-                    "/courses"
-                ],
-                "summary": "Describe a course",
-                "operationId": "describeCourse",
-                "parameters": [
-                    {
-                        "name": "course",
-                        "in": "path",
-                        "description": "Course Name",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "CSE100_WI20_A00"
-                    }
-                ],
-                "responses": {
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    },
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/CourseResult"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    }
-                }
+              }
             },
-            "patch": {
-                "tags": [
-                    "/courses"
-                ],
-                "summary": "Update a course",
-                "operationId": "updateCourse",
-                "parameters": [
-                    {
-                        "name": "course",
-                        "in": "path",
-                        "description": "Original course name",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "CSE100_WI20_A00"
-                    }
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/CourseRequestJson"
-                            }
-                        }
-                    },
-                    "required": true
-                },
-                "responses": {
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    },
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "text/html": {}
-                        }
-                    },
-                    "409": {
-                        "description": "Conflict",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    }
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "OK",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ImportRosterResultJson"
+                  }
                 }
-            }
-        },
-        "/api/courses/{course}/environments/{environment}": {
-            "get": {
-                "tags": [
-                    "/course-environments"
-                ],
-                "summary": "Describe a course environment",
-                "operationId": "describeCourseEnvironment",
-                "parameters": [
-                    {
-                        "name": "course",
-                        "in": "path",
-                        "description": "Course Name",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "CSE100_WI20_A00"
-                    },
-                    {
-                        "name": "environment",
-                        "in": "path",
-                        "description": "Environment Name",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "ENVIRONMENT_0"
-                    }
-                ],
-                "responses": {
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    },
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/CourseEnvironmentResult"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    }
-                }
+              }
             },
-            "patch": {
-                "tags": [
-                    "/course-environments"
-                ],
-                "summary": "Update a course environment",
-                "operationId": "modifyCourseEnvironment",
-                "parameters": [
-                    {
-                        "name": "course",
-                        "in": "path",
-                        "description": "Course name",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "CSE100_WI20_A00"
-                    },
-                    {
-                        "name": "environment",
-                        "in": "path",
-                        "description": "Environment name",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "dsmlp"
-                    }
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/ModifyCourseEnvironmentRequestBody"
-                            }
-                        }
-                    },
-                    "required": true
-                },
-                "responses": {
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    },
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "text/html": {}
-                        }
-                    },
-                    "409": {
-                        "description": "Conflict",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    }
+            "401": {
+              "description": "Unauthorized",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
                 }
-            }
-        },
-        "/api/users/{username}": {
-            "get": {
-                "tags": [
-                    "/users"
-                ],
-                "summary": "Describe a user by username",
-                "operationId": "describeUser",
-                "parameters": [
-                    {
-                        "name": "username",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    },
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UserResultJson"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    }
+              }
+            },
+            "403": {
+              "description": "Forbidden",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
                 }
+              }
             }
-        },
-        "/api/user-launch-profiles/{username}": {
-            "get": {
-                "tags": [
-                    "/users"
-                ],
-                "summary": "Lists a user's launch profiles",
-                "operationId": "listUserLaunchProfiles",
-                "parameters": [
-                    {
-                        "name": "username",
-                        "in": "path",
-                        "description": "Username",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "user01"
-                    }
-                ],
-                "responses": {
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    },
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UserLaunchProfilesResult"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/teams": {
-            "get": {
-                "tags": [
-                    "/teams"
-                ],
-                "summary": "List Teams",
-                "operationId": "listTeams",
-                "parameters": [
-                    {
-                        "name": "username",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    },
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/TeamsResult"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/pools/{poolName}": {
-            "get": {
-                "tags": [
-                    "/pools"
-                ],
-                "summary": "List assigned user and team accounts for a pool",
-                "operationId": "describeEnvironment",
-                "parameters": [
-                    {
-                        "name": "poolName",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    },
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/PoolAccountResult"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/pool-roots/{poolRootName}": {
-            "get": {
-                "tags": [
-                    "/pool-roots"
-                ],
-                "summary": "List pools configured under a pool root",
-                "operationId": "listPools",
-                "parameters": [
-                    {
-                        "name": "poolRootName",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    },
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/PoolsResult"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/environments/{slug}": {
-            "get": {
-                "tags": [
-                    "/environments"
-                ],
-                "summary": "List enrollments for environment",
-                "operationId": "describeEnvironment_1",
-                "parameters": [
-                    {
-                        "name": "slug",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    },
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/EnvironmentJson"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/environments/{slug}/roster": {
-            "get": {
-                "tags": [
-                    "/environments"
-                ],
-                "summary": "List enrollments for environment",
-                "operationId": "uploadEnrollments_1",
-                "parameters": [
-                    {
-                        "name": "slug",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    },
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/EnvironmentEnrollmentResult"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/courses/{course}/teams": {
-            "get": {
-                "tags": [
-                    "/courses"
-                ],
-                "summary": "List Teams",
-                "operationId": "listTeams_1",
-                "parameters": [
-                    {
-                        "name": "course",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    },
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/TeamsResult"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/course-environments": {
-            "get": {
-                "tags": [
-                    "/course-environments"
-                ],
-                "summary": "List course environments",
-                "operationId": "listCourseEnvironments",
-                "parameters": [
-                    {
-                        "name": "request",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/components/schemas/ListCourseEnvironmentsRequestBody"
-                        }
-                    }
-                ],
-                "responses": {
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    },
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ListCourseEnvironmentsResultJson"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorResult"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+          }
         }
+      },
+      "/api/courses": {
+        "get": {
+          "tags": [
+            "/courses"
+          ],
+          "summary": "List active courses",
+          "operationId": "listCourses",
+          "parameters": [
+            {
+              "name": "username",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "tag",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ListCoursesResultJson"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            },
+            "403": {
+              "description": "Forbidden",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Not Found",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "post": {
+          "tags": [
+            "/courses"
+          ],
+          "summary": "Create a course",
+          "operationId": "createCourse",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CourseRequestJson"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "OK",
+              "content": {
+                "text/html": {}
+              }
+            },
+            "401": {
+              "description": "Unauthorized",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            },
+            "403": {
+              "description": "Forbidden",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            },
+            "409": {
+              "description": "Conflict",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal Server Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/courses/{course}/launch-profiles": {
+        "get": {
+          "tags": [
+            "/courses"
+          ],
+          "summary": "List launch profiles for a course",
+          "operationId": "listCourseLaunchProfiles",
+          "parameters": [
+            {
+              "name": "course",
+              "in": "path",
+              "description": "Course Name",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "example": "CSE100_WI20_A00"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ListLaunchProfilesJson"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            },
+            "403": {
+              "description": "Forbidden",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Not Found",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "post": {
+          "tags": [
+            "/courses"
+          ],
+          "summary": "Create a launch profile for a course",
+          "operationId": "createCourseLaunchProfile",
+          "parameters": [
+            {
+              "name": "course",
+              "in": "path",
+              "description": "Course name",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "example": "CSE100_WI20_A00"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LaunchProfileRequestJson"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "OK",
+              "content": {
+                "text/html": {}
+              }
+            },
+            "401": {
+              "description": "Unauthorized",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            },
+            "403": {
+              "description": "Forbidden",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            },
+            "409": {
+              "description": "Conflict",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal Server Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/courses/{course}/environments": {
+        "post": {
+          "tags": [
+            "/course-environments"
+          ],
+          "summary": "Associate a course with an environment",
+          "operationId": "associateCourseEnvironment",
+          "parameters": [
+            {
+              "name": "course",
+              "in": "path",
+              "description": "Course Name",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "example": "CSE100_WI20_A00"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssociateCourseEnvironmentRequestBody"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "OK",
+              "content": {
+                "text/html": {}
+              }
+            },
+            "401": {
+              "description": "Unauthorized",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            },
+            "403": {
+              "description": "Forbidden",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            },
+            "409": {
+              "description": "Conflict",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal Server Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/aws-credentials": {
+        "post": {
+          "tags": [
+            "/aws-credentials"
+          ],
+          "summary": "Generate AWS credentials",
+          "operationId": "xyz",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Args"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "OK",
+              "content": {
+                "text/html": {}
+              }
+            },
+            "401": {
+              "description": "Unauthorized",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            },
+            "403": {
+              "description": "Forbidden",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/users/{username}": {
+        "get": {
+          "tags": [
+            "/users"
+          ],
+          "summary": "Describe a user by username",
+          "operationId": "describeUser",
+          "parameters": [
+            {
+              "name": "username",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/UserResultJson"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            },
+            "403": {
+              "description": "Forbidden",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Not Found",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "patch": {
+          "tags": [
+            "/users"
+          ],
+          "summary": "Patches a user by username",
+          "operationId": "updateUser",
+          "parameters": [
+            {
+              "name": "username",
+              "in": "path",
+              "description": "Original user name",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "example": "boryabov"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserRequestJson"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "OK",
+              "content": {
+                "*/*": {
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized",
+              "content": {
+                "*/*": {
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "403": {
+              "description": "Forbidden",
+              "content": {
+                "*/*": {
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal Server Error",
+              "content": {
+                "*/*": {
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/courses/{course}": {
+        "get": {
+          "tags": [
+            "/courses"
+          ],
+          "summary": "Describe a course",
+          "operationId": "describeCourse",
+          "parameters": [
+            {
+              "name": "course",
+              "in": "path",
+              "description": "Course Name",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "example": "CSE100_WI20_A00"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CourseResult"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            },
+            "403": {
+              "description": "Forbidden",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Not Found",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "patch": {
+          "tags": [
+            "/courses"
+          ],
+          "summary": "Update a course",
+          "operationId": "updateCourse",
+          "parameters": [
+            {
+              "name": "course",
+              "in": "path",
+              "description": "Original course name",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "example": "CSE100_WI20_A00"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CourseRequestJson"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "OK",
+              "content": {
+                "text/html": {}
+              }
+            },
+            "401": {
+              "description": "Unauthorized",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            },
+            "403": {
+              "description": "Forbidden",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            },
+            "409": {
+              "description": "Conflict",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal Server Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/courses/{course}/environments/{environment}": {
+        "get": {
+          "tags": [
+            "/course-environments"
+          ],
+          "summary": "Describe a course environment",
+          "operationId": "describeCourseEnvironment",
+          "parameters": [
+            {
+              "name": "course",
+              "in": "path",
+              "description": "Course Name",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "example": "CSE100_WI20_A00"
+            },
+            {
+              "name": "environment",
+              "in": "path",
+              "description": "Environment Name",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "example": "ENVIRONMENT_0"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CourseEnvironmentResult"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            },
+            "403": {
+              "description": "Forbidden",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal Server Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "patch": {
+          "tags": [
+            "/course-environments"
+          ],
+          "summary": "Update a course environment",
+          "operationId": "modifyCourseEnvironment",
+          "parameters": [
+            {
+              "name": "course",
+              "in": "path",
+              "description": "Course name",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "example": "CSE100_WI20_A00"
+            },
+            {
+              "name": "environment",
+              "in": "path",
+              "description": "Environment name",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "example": "dsmlp"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModifyCourseEnvironmentRequestBody"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "OK",
+              "content": {
+                "text/html": {}
+              }
+            },
+            "401": {
+              "description": "Unauthorized",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            },
+            "403": {
+              "description": "Forbidden",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            },
+            "409": {
+              "description": "Conflict",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal Server Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/user-launch-profiles/{username}": {
+        "get": {
+          "tags": [
+            "/users"
+          ],
+          "summary": "Lists a user's launch profiles",
+          "operationId": "listUserLaunchProfiles",
+          "parameters": [
+            {
+              "name": "username",
+              "in": "path",
+              "description": "Username",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "example": "user01"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/UserLaunchProfilesResult"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            },
+            "403": {
+              "description": "Forbidden",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/teams": {
+        "get": {
+          "tags": [
+            "/teams"
+          ],
+          "summary": "List Teams",
+          "operationId": "listTeams",
+          "parameters": [
+            {
+              "name": "username",
+              "in": "query",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/TeamsResult"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            },
+            "403": {
+              "description": "Forbidden",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Not Found",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/pools/{poolName}": {
+        "get": {
+          "tags": [
+            "/pools"
+          ],
+          "summary": "List assigned user and team accounts for a pool",
+          "operationId": "describeEnvironment",
+          "parameters": [
+            {
+              "name": "poolName",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PoolAccountResult"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            },
+            "403": {
+              "description": "Forbidden",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/pool-roots/{poolRootName}": {
+        "get": {
+          "tags": [
+            "/pool-roots"
+          ],
+          "summary": "List pools configured under a pool root",
+          "operationId": "listPools",
+          "parameters": [
+            {
+              "name": "poolRootName",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PoolsResult"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            },
+            "403": {
+              "description": "Forbidden",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/file-systems": {
+        "get": {
+          "tags": [
+            "/file-systems"
+          ],
+          "summary": "List file systems",
+          "operationId": "listFileSystems",
+          "responses": {
+            "200": {
+              "description": "OK",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ListFileSystemsResultJson"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            },
+            "403": {
+              "description": "Forbidden",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Not Found",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/file-systems/{fileSystem}": {
+        "get": {
+          "tags": [
+            "/file-systems"
+          ],
+          "summary": "Describe a file system",
+          "operationId": "describeFileSystem",
+          "parameters": [
+            {
+              "name": "fileSystem",
+              "in": "path",
+              "description": "File System Name",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "example": "fs01-home"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/FileSystemResult"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            },
+            "403": {
+              "description": "Forbidden",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Not Found",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/environments/{slug}": {
+        "get": {
+          "tags": [
+            "/environments"
+          ],
+          "summary": "List enrollments for environment",
+          "operationId": "describeEnvironment_1",
+          "parameters": [
+            {
+              "name": "slug",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/EnvironmentJson"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            },
+            "403": {
+              "description": "Forbidden",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/environments/{slug}/roster": {
+        "get": {
+          "tags": [
+            "/environments"
+          ],
+          "summary": "List enrollments for environment",
+          "operationId": "uploadEnrollments_1",
+          "parameters": [
+            {
+              "name": "slug",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/EnvironmentEnrollmentResult"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            },
+            "403": {
+              "description": "Forbidden",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/courses/{course}/teams": {
+        "get": {
+          "tags": [
+            "/courses"
+          ],
+          "summary": "List Teams",
+          "operationId": "listTeams_1",
+          "parameters": [
+            {
+              "name": "course",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/TeamsResult"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            },
+            "403": {
+              "description": "Forbidden",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Not Found",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/course-environments": {
+        "get": {
+          "tags": [
+            "/course-environments"
+          ],
+          "summary": "List course environments",
+          "operationId": "listCourseEnvironments",
+          "parameters": [
+            {
+              "name": "request",
+              "in": "query",
+              "required": true,
+              "schema": {
+                "$ref": "#/components/schemas/ListCourseEnvironmentsRequestBody"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ListCourseEnvironmentsResultJson"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            },
+            "403": {
+              "description": "Forbidden",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal Server Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiErrorResult"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "components": {
-        "schemas": {
-            "ApiError": {
-                "type": "object",
-                "properties": {
-                    "timestamp": {
-                        "type": "string"
-                    },
-                    "statusCode": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "message": {
-                        "type": "string"
-                    },
-                    "request": {
-                        "type": "string"
-                    },
-                    "fields": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/ApiFieldError"
-                        }
-                    }
-                }
+      "schemas": {
+        "ApiError": {
+          "type": "object",
+          "properties": {
+            "timestamp": {
+              "type": "string"
             },
-            "ApiErrorResult": {
-                "type": "object",
-                "properties": {
-                    "error": {
-                        "$ref": "#/components/schemas/ApiError"
-                    }
-                }
+            "statusCode": {
+              "type": "integer",
+              "format": "int32"
             },
-            "ApiFieldError": {
-                "type": "object",
-                "properties": {
-                    "name": {
-                        "type": "string"
-                    },
-                    "message": {
-                        "type": "string"
-                    }
-                }
+            "message": {
+              "type": "string"
             },
-            "CourseRequestJson": {
-                "type": "object",
-                "properties": {
-                    "name": {
-                        "type": "string"
-                    },
-                    "studentRole": {
-                        "type": "string"
-                    },
-                    "instructorRole": {
-                        "type": "string"
-                    },
-                    "awsCredentialId": {
-                        "type": "string"
-                    },
-                    "grader": {
-                        "type": "string"
-                    },
-                    "fileSystem": {
-                        "type": "string"
-                    },
-                    "active": {
-                        "type": "boolean"
-                    },
-                    "snowTicket": {
-                        "type": "string"
-                    },
-                    "quarter": {
-                        "type": "string"
-                    },
-                    "subject": {
-                        "type": "string"
-                    },
-                    "courseNumber": {
-                        "type": "string"
-                    },
-                    "instructor": {
-                        "type": "string"
-                    },
-                    "instructorEmail": {
-                        "type": "string"
-                    }
-                }
+            "request": {
+              "type": "string"
             },
-            "LaunchProfileRequestJson": {
-                "type": "object",
-                "properties": {
-                    "launchProfileName": {
-                        "type": "string"
-                    },
-                    "courseName": {
-                        "type": "string"
-                    },
-                    "applicationName": {
-                        "type": "string"
-                    },
-                    "playerName": {
-                        "type": "string"
-                    }
-                }
-            },
-            "AssociateCourseEnvironmentRequestBody": {
-                "type": "object",
-                "properties": {
-                    "environment": {
-                        "type": "string"
-                    },
-                    "status": {
-                        "type": "string"
-                    },
-                    "notes": {
-                        "type": "string"
-                    }
-                }
-            },
-            "Args": {
-                "type": "object",
-                "properties": {
-                    "course": {
-                        "type": "string"
-                    },
-                    "role": {
-                        "type": "string"
-                    }
-                }
-            },
-            "ModifyCourseEnvironmentRequestBody": {
-                "type": "object",
-                "properties": {
-                    "status": {
-                        "type": "string"
-                    },
-                    "notes": {
-                        "type": "string"
-                    }
-                }
-            },
-            "UserResultJson": {
-                "type": "object",
-                "properties": {
-                    "username": {
-                        "type": "string"
-                    },
-                    "firstName": {
-                        "type": "string"
-                    },
-                    "lastName": {
-                        "type": "string"
-                    },
-                    "uid": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "homeFileSystem": {
-                        "type": "string"
-                    },
-                    "enrollments": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    }
-                }
-            },
-            "ApplicationJson": {
-                "type": "object",
-                "properties": {
-                    "name": {
-                        "type": "string"
-                    },
-                    "image": {
-                        "type": "string"
-                    },
-                    "description": {
-                        "type": "string"
-                    },
-                    "pullPolicy": {
-                        "type": "string"
-                    },
-                    "volumeMounts": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/KubernetesVolumeMount"
-                        }
-                    },
-                    "volumes": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/KubernetesVolume"
-                        }
-                    },
-                    "command": {
-                        "type": "string"
-                    },
-                    "args": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    },
-                    "environment": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/KubernetesEnvironmentVariable"
-                        }
-                    },
-                    "extraYaml": {
-                        "type": "string"
-                    }
-                }
-            },
-            "KubernetesEnvironmentVariable": {
-                "type": "object",
-                "properties": {
-                    "name": {
-                        "type": "string"
-                    },
-                    "value": {
-                        "type": "string"
-                    }
-                }
-            },
-            "KubernetesVolume": {
-                "type": "object",
-                "properties": {
-                    "name": {
-                        "type": "string"
-                    },
-                    "type": {
-                        "type": "string"
-                    },
-                    "server": {
-                        "type": "string"
-                    },
-                    "path": {
-                        "type": "string"
-                    },
-                    "accessMode": {
-                        "type": "string"
-                    },
-                    "pvcName": {
-                        "type": "string"
-                    },
-                    "nfs": {
-                        "type": "boolean"
-                    },
-                    "hostPath": {
-                        "type": "boolean"
-                    }
-                }
-            },
-            "KubernetesVolumeMount": {
-                "type": "object",
-                "properties": {
-                    "name": {
-                        "type": "string"
-                    },
-                    "mountPath": {
-                        "type": "string"
-                    },
-                    "mountPropagation": {
-                        "type": "string"
-                    },
-                    "subPath": {
-                        "type": "string"
-                    },
-                    "subPathExpr": {
-                        "type": "string"
-                    },
-                    "readOnly": {
-                        "type": "boolean"
-                    }
-                }
-            },
-            "PlayerJson": {
-                "type": "object",
-                "properties": {
-                    "name": {
-                        "type": "string"
-                    },
-                    "minCpu": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "maxCpu": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "minMemory": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "maxMemory": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "gpu": {
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                }
-            },
-            "UserLaunchProfileJson": {
-                "type": "object",
-                "properties": {
-                    "name": {
-                        "type": "string"
-                    },
-                    "application": {
-                        "$ref": "#/components/schemas/ApplicationJson"
-                    },
-                    "player": {
-                        "$ref": "#/components/schemas/PlayerJson"
-                    },
-                    "course": {
-                        "type": "string"
-                    }
-                }
-            },
-            "UserLaunchProfilesResult": {
-                "type": "object",
-                "properties": {
-                    "launchProfiles": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/UserLaunchProfileJson"
-                        }
-                    }
-                }
-            },
-            "CourseResult": {
-                "type": "object",
-                "properties": {
-                    "tags": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    },
-                    "enrollments": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/UserResult"
-                        }
-                    },
-                    "courseId": {
-                        "type": "string"
-                    },
-                    "pool": {
-                        "$ref": "#/components/schemas/ImmutablePool"
-                    },
-                    "active": {
-                        "type": "boolean"
-                    },
-                    "grader": {
-                        "$ref": "#/components/schemas/UserResult"
-                    },
-                    "fileSystem": {
-                        "$ref": "#/components/schemas/FileSystemResult"
-                    },
-                    "snowTicket": {
-                        "type": "string"
-                    },
-                    "quarter": {
-                        "type": "string"
-                    },
-                    "subject": {
-                        "type": "string"
-                    },
-                    "courseNumber": {
-                        "type": "string"
-                    },
-                    "instructor": {
-                        "type": "string"
-                    },
-                    "instructorEmail": {
-                        "type": "string"
-                    },
-                    "courseName": {
-                        "type": "string",
-                        "writeOnly": true
-                    }
-                }
-            },
-            "FileSystemResult": {
-                "type": "object",
-                "properties": {
-                    "identifier": {
-                        "type": "string"
-                    },
-                    "server": {
-                        "type": "string"
-                    },
-                    "path": {
-                        "type": "string"
-                    },
-                    "type": {
-                        "type": "string"
-                    }
-                }
-            },
-            "ListFileSystemsResultJson": {
-                "type": "object",
-                "properties": {
-                    "fileSystems": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/FileSystemResult"
-                        }
-                    }
-                }
-            },
-            "ImmutablePool": {
-                "type": "object",
-                "properties": {
-                    "name": {
-                        "type": "string"
-                    },
-                    "poolRootName": {
-                        "type": "string"
-                    },
-                    "rule": {
-                        "type": "string"
-                    },
-                    "ou": {
-                        "type": "string"
-                    },
-                    "courseName": {
-                        "type": "string"
-                    },
-                    "mode": {
-                        "type": "string"
-                    }
-                }
-            },
-            "TeamResult": {
-                "type": "object",
-                "properties": {
-                    "teamName": {
-                        "type": "string"
-                    },
-                    "sanitizedTeamName": {
-                        "type": "string"
-                    },
-                    "uniqueName": {
-                        "type": "string"
-                    },
-                    "gid": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "members": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/UserResult"
-                        }
-                    },
-                    "course": {
-                        "$ref": "#/components/schemas/CourseResult"
-                    }
-                }
-            },
-            "TeamsResult": {
-                "type": "object",
-                "properties": {
-                    "teams": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/TeamResult"
-                        }
-                    }
-                }
-            },
-            "UserResult": {
-                "type": "object",
-                "properties": {
-                    "username": {
-                        "type": "string"
-                    },
-                    "firstName": {
-                        "type": "string"
-                    },
-                    "lastName": {
-                        "type": "string"
-                    },
-                    "uid": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "role": {
-                        "type": "string"
-                    }
-                }
-            },
-            "PoolAccountJson": {
-                "type": "object",
-                "properties": {
-                    "accountId": {
-                        "type": "string"
-                    },
-                    "accountName": {
-                        "type": "string"
-                    },
-                    "username": {
-                        "type": "string"
-                    },
-                    "teamName": {
-                        "type": "string"
-                    }
-                }
-            },
-            "PoolAccountResult": {
-                "type": "object",
-                "properties": {
-                    "accounts": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/PoolAccountJson"
-                        }
-                    }
-                }
-            },
-            "PoolJson": {
-                "type": "object",
-                "properties": {
-                    "name": {
-                        "type": "string"
-                    },
-                    "root": {
-                        "type": "string"
-                    },
-                    "predicate": {
-                        "type": "string"
-                    },
-                    "ou": {
-                        "type": "string"
-                    },
-                    "courseName": {
-                        "type": "string"
-                    },
-                    "mode": {
-                        "type": "string"
-                    }
-                }
-            },
-            "PoolsResult": {
-                "type": "object",
-                "properties": {
-                    "pools": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/PoolJson"
-                        }
-                    }
-                }
-            },
-            "EnvironmentJson": {
-                "type": "object",
-                "properties": {
-                    "volumes": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/Volume"
-                        }
-                    }
-                }
-            },
-            "Volume": {
-                "type": "object",
-                "properties": {
-                    "type": {
-                        "type": "string"
-                    },
-                    "name": {
-                        "type": "string"
-                    },
-                    "server": {
-                        "type": "string"
-                    },
-                    "path": {
-                        "type": "string"
-                    },
-                    "accessMode": {
-                        "type": "string"
-                    },
-                    "pvcName": {
-                        "type": "string"
-                    }
-                }
-            },
-            "EnvironmentEnrollmentResult": {
-                "type": "object",
-                "properties": {
-                    "username": {
-                        "type": "string"
-                    },
-                    "firstName": {
-                        "type": "string"
-                    },
-                    "lastName": {
-                        "type": "string"
-                    },
-                    "uid": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "token": {
-                        "type": "string"
-                    }
-                }
-            },
-            "ListEnrollmentsForm": {
-                "type": "object",
-                "properties": {
-                    "courseSlugs": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    },
-                    "username": {
-                        "type": "string"
-                    },
-                    "courseSlug": {
-                        "type": "array",
-                        "writeOnly": true,
-                        "items": {
-                            "type": "string"
-                        }
-                    }
-                }
-            },
-            "CourseJson": {
-                "type": "object",
-                "properties": {
-                    "courseId": {
-                        "type": "string"
-                    }
-                }
-            },
-            "ListCoursesResultJson": {
-                "type": "object",
-                "properties": {
-                    "courses": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/CourseJson"
-                        }
-                    }
-                }
-            },
-            "LaunchProfileJson": {
-                "type": "object",
-                "properties": {
-                    "name": {
-                        "type": "string"
-                    },
-                    "application": {
-                        "$ref": "#/components/schemas/ApplicationJson"
-                    },
-                    "player": {
-                        "$ref": "#/components/schemas/PlayerJson"
-                    }
-                }
-            },
-            "ListLaunchProfilesJson": {
-                "type": "object",
-                "properties": {
-                    "launchProfiles": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/LaunchProfileJson"
-                        }
-                    }
-                }
-            },
-            "CourseEnvironmentResult": {
-                "type": "object",
-                "properties": {
-                    "name": {
-                        "type": "string"
-                    },
-                    "environment": {
-                        "type": "string"
-                    },
-                    "status": {
-                        "type": "string",
-                        "enum": [
-                            "PENDING",
-                            "APPROVED",
-                            "READY",
-                            "INACTIVE",
-                            "CANCELLED"
-                        ]
-                    },
-                    "notes": {
-                        "type": "string"
-                    },
-                    "courseName": {
-                        "type": "string",
-                        "writeOnly": true
-                    },
-                    "environmentSlug": {
-                        "type": "string",
-                        "writeOnly": true
-                    }
-                }
-            },
-            "Authentication": {
-                "type": "object",
-                "properties": {
-                    "admin": {
-                        "type": "boolean"
-                    },
-                    "username": {
-                        "type": "string"
-                    },
-                    "student": {
-                        "type": "boolean"
-                    },
-                    "ta": {
-                        "type": "boolean"
-                    }
-                }
-            },
-            "ListCourseEnvironmentsRequestBody": {
-                "type": "object",
-                "properties": {
-                    "status": {
-                        "type": "string"
-                    },
-                    "subject": {
-                        "type": "string"
-                    },
-                    "term": {
-                        "type": "string"
-                    },
-                    "authentication": {
-                        "$ref": "#/components/schemas/Authentication"
-                    }
-                }
-            },
-            "ListCourseEnvironmentJson": {
-                "type": "object",
-                "properties": {
-                    "environment": {
-                        "type": "string"
-                    },
-                    "status": {
-                        "type": "string"
-                    },
-                    "notes": {
-                        "type": "string"
-                    }
-                }
-            },
-            "ListCourseEnvironmentsResultJson": {
-                "type": "object",
-                "properties": {
-                    "environments": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/ListCourseEnvironmentJson"
-                        }
-                    }
-                }
+            "fields": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/ApiFieldError"
+              }
             }
+          }
+        },
+        "ApiErrorResult": {
+          "type": "object",
+          "properties": {
+            "error": {
+              "$ref": "#/components/schemas/ApiError"
+            }
+          }
+        },
+        "ApiFieldError": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            }
+          }
+        },
+        "ImportRosterResultJson": {
+          "type": "object",
+          "properties": {
+            "errors": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "modifications": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/Modification"
+              }
+            }
+          }
+        },
+        "Modification": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string"
+            },
+            "username": {
+              "type": "string"
+            },
+            "firstName": {
+              "type": "string"
+            },
+            "lastName": {
+              "type": "string"
+            },
+            "className": {
+              "type": "string"
+            },
+            "uid": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "role": {
+              "type": "string"
+            },
+            "add": {
+              "type": "boolean"
+            },
+            "delete": {
+              "type": "boolean"
+            },
+            "modify": {
+              "type": "boolean"
+            },
+            "genApi": {
+              "type": "boolean"
+            }
+          }
+        },
+        "CourseRequestJson": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "studentRole": {
+              "type": "string"
+            },
+            "instructorRole": {
+              "type": "string"
+            },
+            "awsCredentialId": {
+              "type": "string"
+            },
+            "grader": {
+              "type": "string"
+            },
+            "fileSystem": {
+              "type": "string"
+            },
+            "active": {
+              "type": "boolean"
+            },
+            "snowTicket": {
+              "type": "string"
+            },
+            "quarter": {
+              "type": "string"
+            },
+            "subject": {
+              "type": "string"
+            },
+            "courseNumber": {
+              "type": "string"
+            },
+            "instructor": {
+              "type": "string"
+            },
+            "instructorEmail": {
+              "type": "string"
+            }
+          }
+        },
+        "LaunchProfileRequestJson": {
+          "type": "object",
+          "properties": {
+            "launchProfileName": {
+              "type": "string"
+            },
+            "courseName": {
+              "type": "string"
+            },
+            "applicationName": {
+              "type": "string"
+            },
+            "playerName": {
+              "type": "string"
+            }
+          }
+        },
+        "AssociateCourseEnvironmentRequestBody": {
+          "type": "object",
+          "properties": {
+            "environment": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
+            },
+            "notes": {
+              "type": "string"
+            }
+          }
+        },
+        "Args": {
+          "type": "object",
+          "properties": {
+            "course": {
+              "type": "string"
+            },
+            "role": {
+              "type": "string"
+            }
+          }
+        },
+        "UserRequestJson": {
+          "type": "object",
+          "properties": {
+            "username": {
+              "type": "string"
+            },
+            "firstName": {
+              "type": "string"
+            },
+            "lastName": {
+              "type": "string"
+            },
+            "roles": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "apiKey": {
+              "type": "string"
+            },
+            "uid": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "homeFileSystem": {
+              "type": "string"
+            }
+          }
+        },
+        "ModifyCourseEnvironmentRequestBody": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string"
+            },
+            "notes": {
+              "type": "string"
+            }
+          }
+        },
+        "UserResultJson": {
+          "type": "object",
+          "properties": {
+            "username": {
+              "type": "string"
+            },
+            "firstName": {
+              "type": "string"
+            },
+            "lastName": {
+              "type": "string"
+            },
+            "uid": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "homeFileSystem": {
+              "type": "string"
+            },
+            "enrollments": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "ApplicationJson": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "image": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "pullPolicy": {
+              "type": "string"
+            },
+            "volumeMounts": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/KubernetesVolumeMount"
+              }
+            },
+            "volumes": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/KubernetesVolume"
+              }
+            },
+            "command": {
+              "type": "string"
+            },
+            "args": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "environment": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/KubernetesEnvironmentVariable"
+              }
+            },
+            "extraYaml": {
+              "type": "string"
+            }
+          }
+        },
+        "KubernetesEnvironmentVariable": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "value": {
+              "type": "string"
+            }
+          }
+        },
+        "KubernetesVolume": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string"
+            },
+            "server": {
+              "type": "string"
+            },
+            "path": {
+              "type": "string"
+            },
+            "accessMode": {
+              "type": "string"
+            },
+            "pvcName": {
+              "type": "string"
+            },
+            "nfs": {
+              "type": "boolean"
+            },
+            "hostPath": {
+              "type": "boolean"
+            }
+          }
+        },
+        "KubernetesVolumeMount": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "mountPath": {
+              "type": "string"
+            },
+            "mountPropagation": {
+              "type": "string"
+            },
+            "subPath": {
+              "type": "string"
+            },
+            "subPathExpr": {
+              "type": "string"
+            },
+            "readOnly": {
+              "type": "boolean"
+            }
+          }
+        },
+        "PlayerJson": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "minCpu": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "maxCpu": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "minMemory": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "maxMemory": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "gpu": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        },
+        "UserLaunchProfileJson": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "displayName": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "application": {
+              "$ref": "#/components/schemas/ApplicationJson"
+            },
+            "player": {
+              "$ref": "#/components/schemas/PlayerJson"
+            },
+            "course": {
+              "type": "string"
+            }
+          }
+        },
+        "UserLaunchProfilesResult": {
+          "type": "object",
+          "properties": {
+            "launchProfiles": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/UserLaunchProfileJson"
+              }
+            }
+          }
+        },
+        "CourseResult": {
+          "type": "object",
+          "properties": {
+            "tags": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "enrollments": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/UserResult"
+              }
+            },
+            "courseId": {
+              "type": "string"
+            },
+            "pool": {
+              "$ref": "#/components/schemas/ImmutablePool"
+            },
+            "active": {
+              "type": "boolean"
+            },
+            "grader": {
+              "$ref": "#/components/schemas/UserResult"
+            },
+            "fileSystem": {
+              "$ref": "#/components/schemas/FileSystemResult"
+            },
+            "snowTicket": {
+              "type": "string"
+            },
+            "quarter": {
+              "type": "string"
+            },
+            "subject": {
+              "type": "string"
+            },
+            "courseNumber": {
+              "type": "string"
+            },
+            "instructor": {
+              "type": "string"
+            },
+            "instructorEmail": {
+              "type": "string"
+            },
+            "courseName": {
+              "type": "string",
+              "writeOnly": true
+            }
+          }
+        },
+        "FileSystemResult": {
+          "type": "object",
+          "properties": {
+            "identifier": {
+              "type": "string"
+            },
+            "server": {
+              "type": "string"
+            },
+            "path": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string"
+            }
+          }
+        },
+        "ImmutablePool": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "poolRootName": {
+              "type": "string"
+            },
+            "rule": {
+              "type": "string"
+            },
+            "ou": {
+              "type": "string"
+            },
+            "courseName": {
+              "type": "string"
+            },
+            "mode": {
+              "type": "string"
+            }
+          }
+        },
+        "TeamResult": {
+          "type": "object",
+          "properties": {
+            "teamName": {
+              "type": "string"
+            },
+            "sanitizedTeamName": {
+              "type": "string"
+            },
+            "uniqueName": {
+              "type": "string"
+            },
+            "gid": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "members": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/UserResult"
+              }
+            },
+            "course": {
+              "$ref": "#/components/schemas/CourseResult"
+            }
+          }
+        },
+        "TeamsResult": {
+          "type": "object",
+          "properties": {
+            "teams": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/TeamResult"
+              }
+            }
+          }
+        },
+        "UserResult": {
+          "type": "object",
+          "properties": {
+            "username": {
+              "type": "string"
+            },
+            "firstName": {
+              "type": "string"
+            },
+            "lastName": {
+              "type": "string"
+            },
+            "uid": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "role": {
+              "type": "string"
+            }
+          }
+        },
+        "PoolAccountJson": {
+          "type": "object",
+          "properties": {
+            "accountId": {
+              "type": "string"
+            },
+            "accountName": {
+              "type": "string"
+            },
+            "username": {
+              "type": "string"
+            },
+            "teamName": {
+              "type": "string"
+            }
+          }
+        },
+        "PoolAccountResult": {
+          "type": "object",
+          "properties": {
+            "accounts": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/PoolAccountJson"
+              }
+            }
+          }
+        },
+        "PoolJson": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "root": {
+              "type": "string"
+            },
+            "predicate": {
+              "type": "string"
+            },
+            "ou": {
+              "type": "string"
+            },
+            "courseName": {
+              "type": "string"
+            },
+            "mode": {
+              "type": "string"
+            }
+          }
+        },
+        "PoolsResult": {
+          "type": "object",
+          "properties": {
+            "pools": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/PoolJson"
+              }
+            }
+          }
+        },
+        "ListFileSystemsResultJson": {
+          "type": "object",
+          "properties": {
+            "fileSystems": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/FileSystemResult"
+              }
+            }
+          }
+        },
+        "EnvironmentJson": {
+          "type": "object",
+          "properties": {
+            "volumes": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/Volume"
+              }
+            }
+          }
+        },
+        "Volume": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "server": {
+              "type": "string"
+            },
+            "path": {
+              "type": "string"
+            },
+            "accessMode": {
+              "type": "string"
+            },
+            "pvcName": {
+              "type": "string"
+            }
+          }
+        },
+        "EnvironmentEnrollmentResult": {
+          "type": "object",
+          "properties": {
+            "username": {
+              "type": "string"
+            },
+            "firstName": {
+              "type": "string"
+            },
+            "lastName": {
+              "type": "string"
+            },
+            "uid": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "token": {
+              "type": "string"
+            }
+          }
+        },
+        "ListEnrollmentsForm": {
+          "type": "object",
+          "properties": {
+            "courseSlugs": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "username": {
+              "type": "string"
+            },
+            "courseSlug": {
+              "type": "array",
+              "writeOnly": true,
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "CourseJson": {
+          "type": "object",
+          "properties": {
+            "courseId": {
+              "type": "string"
+            }
+          }
+        },
+        "ListCoursesResultJson": {
+          "type": "object",
+          "properties": {
+            "courses": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/CourseJson"
+              }
+            }
+          }
+        },
+        "LaunchProfileJson": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "displayName": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "application": {
+              "$ref": "#/components/schemas/ApplicationJson"
+            },
+            "player": {
+              "$ref": "#/components/schemas/PlayerJson"
+            }
+          }
+        },
+        "ListLaunchProfilesJson": {
+          "type": "object",
+          "properties": {
+            "launchProfiles": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/LaunchProfileJson"
+              }
+            }
+          }
+        },
+        "CourseEnvironmentResult": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "environment": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "PENDING",
+                "APPROVED",
+                "READY",
+                "INACTIVE",
+                "CANCELLED"
+              ]
+            },
+            "notes": {
+              "type": "string"
+            },
+            "courseName": {
+              "type": "string",
+              "writeOnly": true
+            },
+            "environmentSlug": {
+              "type": "string",
+              "writeOnly": true
+            }
+          }
+        },
+        "Authentication": {
+          "type": "object",
+          "properties": {
+            "admin": {
+              "type": "boolean"
+            },
+            "username": {
+              "type": "string"
+            },
+            "ta": {
+              "type": "boolean"
+            },
+            "student": {
+              "type": "boolean"
+            }
+          }
+        },
+        "ListCourseEnvironmentsRequestBody": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string"
+            },
+            "subject": {
+              "type": "string"
+            },
+            "term": {
+              "type": "string"
+            },
+            "authentication": {
+              "$ref": "#/components/schemas/Authentication"
+            }
+          }
+        },
+        "ListCourseEnvironmentJson": {
+          "type": "object",
+          "properties": {
+            "environment": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
+            },
+            "notes": {
+              "type": "string"
+            }
+          }
+        },
+        "ListCourseEnvironmentsResultJson": {
+          "type": "object",
+          "properties": {
+            "environments": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/ListCourseEnvironmentJson"
+              }
+            }
+          }
         }
+      }
     }
-}
+  }
