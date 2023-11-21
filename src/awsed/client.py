@@ -118,7 +118,7 @@ class DefaultAwsedClient(AbstractAwsedClient):
     def list_file_systems(self) -> ListFileSystemsResultJson:
         return self.dataclass_request(ListFileSystemsResultJson, "/file-systems")
 
-    def describe_file_system(self, file_system: str) -> Any:
+    def describe_file_system(self, file_system: str) -> FileSystemResult:
         return self.dataclass_request(FileSystemResult, f"/file-systems/{file_system}")
 
     def list_courses(
