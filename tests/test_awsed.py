@@ -727,7 +727,7 @@ class TestAwsedClient:
                 "identifier": "fs1",
                 "server": "fs_server",
                 "path": "/fs_path",
-                "type": "Workspace"
+                "type": "workspace"
             },
             "snowTicket": "ST123",
             "quarter": "Q1",
@@ -773,7 +773,7 @@ class TestAwsedClient:
                 role="grader",
             ),
             fileSystem=FileSystemResult(
-                identifier="fs1", server="fs_server", path="/fs_path", type="Workspace"
+                identifier="fs1", server="fs_server", path="/fs_path", type="workspace"
             ),
             snowTicket="ST123",
             quarter="Q1",
@@ -957,7 +957,7 @@ class TestAwsedClient:
                                 "identifier": "fs1",
                                 "server": "server1",
                                 "path": "/path/to/files",
-                                "type": "Workspace"
+                                "type": "workspace"
                             },
                             "snowTicket": "ticket123",
                             "quarter": "Fall",
@@ -1021,7 +1021,7 @@ class TestAwsedClient:
                             role="instructor",
                         ),
                         fileSystem=FileSystemResult(
-                            identifier="fs1", server="server1", path="/path/to/files", type="Workspace"
+                            identifier="fs1", server="server1", path="/path/to/files", type="workspace"
                         ),
                         snowTicket="ticket123",
                         quarter="Fall",
