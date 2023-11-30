@@ -30,6 +30,20 @@ class AbstractAwsedClient(ABC):
         pass
 
     @abstractmethod
+    def patch_user(self, username: str, user: UserRequestJson) -> Any:
+        """
+        Updates details of a specific user
+        
+        Args:
+            username: A string representing the username of the user
+            user: An object containing the modifications to the user information
+            
+        Returns:
+            An object confirming the modifications to the user
+        """
+        pass
+
+    @abstractmethod
     def list_user_launch_profiles(self, username: str) -> Any:
         """
         Retrieves a list of launch profiles associated with a specified user.
