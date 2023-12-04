@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import Optional, Any, Dict
 
+from awsed.types import UserRequestJson
+
 
 class AbstractAwsedClient(ABC):
     """This is a default implementation of the AwsedClient interface. It uses the requests library to make HTTP requests to the AWSEd API.
