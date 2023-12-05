@@ -183,7 +183,7 @@ class FileSystemResult:
     identifier: str
     server: str
     path: str
-    type: str
+    type: str = "workspace"
 
 
 @dataclass
