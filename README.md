@@ -21,7 +21,7 @@ Please follow the installation procedure and initialize the client as such:
 ```python3
     from awsed.client import DefaultClient
 
-    awsed_cleint = DefaultClient(endpoint='awsed_endpoint.com', awsed_api_key='42')
+    awsed_client = DefaultClient(endpoint='awsed_endpoint.com', awsed_api_key='42')
 ```
 
 # Development
