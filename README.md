@@ -17,10 +17,21 @@ or add `git+https://github.com/ucsd-ets/awsed_python_client@Rebuild` to your `re
 Please follow the installation procedure and initialize the client as such:
 
 ```python3
-    from awsed.client import DefaultClient 
+    from awsed.client import DefaultClient
 
     awsed_cleint = DefaultClient(endpoint='awsed_endpoint.com', awsed_api_key='42')
 ```
+
+
+# Development
+
+```
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+pytest
+```
+
 
 ## API Endpoints
 
@@ -312,7 +323,7 @@ Update course info
 
 #### list_course_teams
 
-#### Parameters 
+#### Parameters
 
 * course: str - course ID
 
