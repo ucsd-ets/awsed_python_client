@@ -1,18 +1,20 @@
 # AWSed Python Client
 
-`awsed_python_client` is a python client for `awsed.ucsd.edu` API. Refer to [API.md](API.md) for a list of commands.
+`awsed_python_client` is a python client for the `awsed.ucsd.edu` API. Refer to [API.md](API.md) for a list of commands.
 
-# Installation
+# Usage
+
+## Installation
 
 To install awsed `awsed_python_client` run
 
 ```
-    pip install git+https://github.com/ucsd-ets/awsed_python_client@Rebuild
+    pip install git+https://github.com/ucsd-ets/awsed_python_client@VERSION
 ```
 
-or add `git+https://github.com/ucsd-ets/awsed_python_client@Rebuild` to your `requirments.txt`
+or add `git+https://github.com/ucsd-ets/awsed_python_client@VERSION` to `requirments.txt`
 
-# Getting Started
+## Getting Started
 
 Please follow the installation procedure and initialize the client as such:
 
