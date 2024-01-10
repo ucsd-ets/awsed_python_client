@@ -6,22 +6,25 @@
 
 ## Installation
 
-To install awsed `awsed_python_client` run
+To install awsed `awsed_python_client` run:
 
 ```
-    pip install git+https://github.com/ucsd-ets/awsed_python_client@VERSION
+pip install git+https://github.com/ucsd-ets/awsed_python_client@VERSION
 ```
 
-or add `git+https://github.com/ucsd-ets/awsed_python_client@VERSION` to `requirments.txt`
+or add it to `requirements.txt`:
+
+```
+git+https://github.com/ucsd-ets/awsed_python_client@VERSION
+```
 
 ## Getting Started
 
 Please follow the installation procedure and initialize the client as such:
 
 ```python3
-    from awsed.client import DefaultClient
-
-    awsed_client = DefaultClient(endpoint='awsed_endpoint.com', awsed_api_key='42')
+from awsed.client import DefaultClient
+awsed_client = DefaultClient(endpoint='awsed_endpoint.com', awsed_api_key='42')
 ```
 
 # Development
