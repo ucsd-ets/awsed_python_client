@@ -54,6 +54,36 @@ class TestAwsedClient:
 
         assert_that(user, equal_to(userResultJson1))
 
+
+    def test_home_file_system_is_optional(self, requests_mock):
+        requests_mock.get(
+            "https://awsed.ucsd.edu/api/users/johndoe",
+            text="""
+            {
+                "username": "johndoe",
+                "firstName": "john",
+                "lastName": "doe",
+                "uid": 12345,
+                "enrollments": [
+                    "ABC100",
+                    "ABC101"
+                ]
+            }
+            """,
+        )
+        user = self.client.describe_user("johndoe")
+
+        userResultJson1 = UserResultJson(
+            username="johndoe",
+            firstName="john",
+            lastName="doe",
+            uid=12345,
+            homeFileSystem=None,
+            enrollments=["ABC100", "ABC101"],
+        )
+
+        assert_that(user, equal_to(userResultJson1))
+
     def test_get_user_none(self, requests_mock):
         requests_mock.get("https://awsed.ucsd.edu/api/users/johndoe", text="""""")
         assert_that(self.client.describe_user("johndoe"), equal_to(None))
