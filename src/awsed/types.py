@@ -77,29 +77,17 @@ class UserResultJson:
 
 @dataclass
 class UserRequestJson:
-    username: str
-    firstName: Optional[str]
-    lastName: Optional[str]
     roles: Optional[List[str]]
-    apiKey: Optional[str]
-    uid: int
+    uid: Optional[int]
     homeFileSystem: Optional[str]
 
     def __init__(
         self,
-        username=None,
-        firstName=None,
-        lastName=None,
         roles=None,
-        apiKey=None,
         uid=None,
         homeFileSystem=None,
     ):
-        self.username = username
-        self.firstName = firstName
-        self.lastName = lastName
         self.roles = roles
-        self.apiKey = apiKey
         self.uid = uid
         self.homeFileSystem = homeFileSystem
 
