@@ -336,6 +336,22 @@ List enrollments for environment
 
 * requests.exceptions.HTTPError - raises error when call result code is not 2xx
 
+#### list_active_users_slug
+
+List active users
+
+#### Parameters
+
+* slug: str - slug ID
+
+##### Return type
+
+* MinimalEnvironmentEnrollmentResult - gets enrollments, but only UID + username as a set
+
+##### Raises
+
+* requests.exceptions.HTTPError - raises error when call result code is not 2xx
+
 ---
 
 ### Teams

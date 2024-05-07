@@ -310,7 +310,7 @@ class EnvironmentEnrollmentResult:
     
 @dataclass
 class MinimalEnvironmentEnrollmentResult:
-    enrollments: Optional[Set[MinimalEnrollmentResult]]
+    users: Optional[Set[MinimalEnrollmentResult]]
 
 
 @dataclass
