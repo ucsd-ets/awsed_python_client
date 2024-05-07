@@ -1,6 +1,6 @@
 from abc import ABCMeta, abstractmethod
 from dataclasses import dataclass, field
-from typing import List, Optional
+from typing import List, Set, Optional
 
 # Use error classes provided by requests
 # @dataclass
@@ -289,11 +289,28 @@ class EnrollmentResult:
     lastName: Optional[str]
     uid: int
     token: Optional[str]
+    
+@dataclass
+class MinimalEnrollmentResult:
+    username: str
+    uid: int
+    
+    # hashing logic needed for set
+    def __hash__(self):
+        return hash((self.username, self.uid))
 
+    def __eq__(self, other):
+        if not isinstance(other, type(self)):
+            return NotImplemented
+        return self.username == other.username and self.uid == other.uid
 
 @dataclass
 class EnvironmentEnrollmentResult:
     enrollments: Optional[List[EnrollmentResult]]
+    
+@dataclass
+class MinimalEnvironmentEnrollmentResult:
+    enrollments: Optional[Set[MinimalEnrollmentResult]]
 
 
 @dataclass

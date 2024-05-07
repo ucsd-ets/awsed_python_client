@@ -311,6 +311,18 @@ class AbstractAwsedClient(ABC):
             Any: An object representing the enrollments roster.
         """
         pass
+    
+    @abstractmethod
+    def list_active_users_slug(self, slug: str) -> Any:
+        """
+        List all active users in slug. Uses a set + only grabs username/uid.
+
+        Args:
+            slug (str): The slug for which to list the active users.
+
+        Returns:
+            Any: An object representing the active users.
+        """
 
     @abstractmethod
     def upload_enrollments(self, csv_content: str, dry_run: bool = False) -> str:

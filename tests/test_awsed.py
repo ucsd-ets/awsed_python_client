@@ -934,6 +934,38 @@ class TestAwsedClient:
                 )
             ),
         )
+        
+    def test_get_active_users_slug(self, requests_mock):
+        requests_mock.get(
+            "https://awsed.ucsd.edu/api/environments/env123/roster",
+            text="""
+            [
+                {
+                    "username": "johndoe",
+                    "firstName": "John",
+                    "lastName": "Doe",
+                    "uid": 101,
+                    "token": "token123"
+                }
+            ]
+            """,
+        )
+
+        enrollment_result = self.client.list_active_users_slug("env123")
+
+        assert_that(
+            enrollment_result,
+            equal_to(
+                MinimalEnvironmentEnrollmentResult(
+                    [
+                        MinimalEnrollmentResult(
+                            username="johndoe",
+                            uid=101,
+                        )
+                    ]
+                )
+            ),
+        )
 
     def test_list_teams(self, requests_mock):
         requests_mock.get(

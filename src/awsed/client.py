@@ -164,6 +164,13 @@ class DefaultAwsedClient(AbstractAwsedClient):
                 EnrollmentResult, f"/environments/{slug}/roster"
             )
         )
+        
+    def list_active_users_slug(self, slug: str) -> MinimalEnvironmentEnrollmentResult:
+        return MinimalEnvironmentEnrollmentResult(
+            self.list_of_dataclass_request(
+                MinimalEnrollmentResult, f"/environments/{slug}/roster"
+            )
+        )    
 
     def upload_enrollments(self, csv_content: str, dry_run: bool = False) -> str:
         url = "/enrollments"
