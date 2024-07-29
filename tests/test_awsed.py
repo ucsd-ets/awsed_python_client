@@ -54,9 +54,8 @@ class TestAwsedClient:
 
         assert_that(user, equal_to(userResultJson1))
     
-    # Test that get_user_quota correctly retrieves and processes user quota information from the API.
+    # Test that get_user_quota correctly retrieves one user quota item
     def test_get_user_quota_one_item(self, requests_mock):
-        # Only has gpu right now in resources, might be more in the future
         mock_response = {
             "quota": {
                 "user": "johndoe",
@@ -79,8 +78,8 @@ class TestAwsedClient:
         
         assert_that(user, equal_to(userQuotaResponse1))
     
+    # Test that get_user_quota correctly retrieves multiple user quota items
     def test_get_user_quota_multi_items(self, requests_mock):
-        # Only has gpu right now in resources, might be more in the future
         mock_response = {
             "quota": {
                 "user": "johndoe",
