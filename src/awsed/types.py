@@ -309,6 +309,19 @@ class ListCoursesResultJson:
 
 
 @dataclass
+class UserQuota:
+    gpu: int
+
+@dataclass
+class Quota:
+    user: str
+    resources: UserQuota
+
+@dataclass
+class UserQuotaResponse:
+    quota: Quota
+
+@dataclass
 class LaunchProfileJson:
     name: str
     application: ApplicationJson

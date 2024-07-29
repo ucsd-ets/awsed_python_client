@@ -53,7 +53,31 @@ class TestAwsedClient:
         )
 
         assert_that(user, equal_to(userResultJson1))
-
+    
+    # Test that get_user_quota correctly retrieves and processes user quota information from the API.
+    def test_get_user_quota(self, requests_mock):
+        # Only has gpu right now in resources, might be more in the future
+        mock_response = {
+            "quota": {
+                "user": "johndoe",
+                "resources": {
+                    "gpu": 10
+                }
+            }
+        }
+        userQuotaResponse1 = UserQuotaResponse(
+            quota=Quota(
+                user="johndoe",
+                resources=UserQuota(gpu=10)
+            )
+        )
+        # Convert the mock_response dictionary to a JSON string
+        requests_mock.get(
+            "https://awsed.ucsd.edu/api/quotas/johndoe", json = mock_response
+        )
+        user = self.client.get_user_quota("johndoe")
+        
+        assert_that(user, equal_to(userQuotaResponse1))
 
     def test_home_file_system_is_optional(self, requests_mock):
         requests_mock.get(
@@ -83,13 +107,21 @@ class TestAwsedClient:
         )
 
         assert_that(user, equal_to(userResultJson1))
-
+        
+    # Verifies cases where the API response is empty or contains an empty JSON object.
     def test_get_user_none(self, requests_mock):
         requests_mock.get("https://awsed.ucsd.edu/api/users/johndoe", text="""""")
         assert_that(self.client.describe_user("johndoe"), equal_to(None))
 
         requests_mock.get("https://awsed.ucsd.edu/api/users/johndoe", json={})
         assert_that(self.client.describe_user("johndoe"), equal_to(None))
+    
+    def test_get_user_quota_none(self, requests_mock):
+        requests_mock.get("https://awsed.ucsd.edu/api/quotas/johndoe", text="""""")
+        assert_that(self.client.get_user_quota("johndoe"), equal_to(None))
+
+        requests_mock.get("https://awsed.ucsd.edu/api/quotas/johndoe", json={})
+        assert_that(self.client.get_user_quota("johndoe"), equal_to(None))
 
     def test_list_user_launch_profiles(self, requests_mock):
         requests_mock.get(

@@ -48,7 +48,11 @@ class DefaultAwsedClient(AbstractAwsedClient):
         #         EnrollmentResult, "/enrollments", params=params
         #     )
         # )
-
+    
+    # Retrieves the quota information for a specific user.
+    def get_user_quota(self, username: str) -> UserQuotaResponse:
+        return self.dataclass_request(UserQuotaResponse, f"/quotas/{username}")
+        
     def import_enrollments(self, csv_content: str, dry_run: bool = False) -> str:
         url = "/enrollments"
         params = {"dryRun": dry_run}
