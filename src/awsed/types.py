@@ -1,6 +1,6 @@
 from abc import ABCMeta, abstractmethod
 from dataclasses import dataclass, field
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 
 # Use error classes provided by requests
 # @dataclass
@@ -307,6 +307,14 @@ class ListEnrollmentsForm:
 class ListCoursesResultJson:
     courses: List[CourseJson]
 
+@dataclass
+class Quota:
+    user: str
+    resources: Dict[str, Any]
+
+@dataclass
+class UserQuotaResponse:
+    quota: Quota
 
 @dataclass
 class LaunchProfileJson:

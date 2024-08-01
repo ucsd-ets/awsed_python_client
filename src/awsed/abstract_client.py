@@ -71,7 +71,20 @@ class AbstractAwsedClient(ABC):
         A list of enrollments that match the provided criteria.
         """
         pass
+    
+    @abstractmethod
+    def get_user_quota(self, username: str) -> Any:
+        """
+        Retrieves the gpu quota information for a specified user.
 
+        Args:
+            username: A string representing the username of the user.
+
+        Returns:
+            The quota information for the specified user.
+        """
+        pass
+    
     @abstractmethod
     def import_enrollments(self, csv_content: str, dry_run: bool = False) -> str:
         """Imports enrollment data from provided CSV content.
