@@ -153,6 +153,9 @@ class ApplicationJson:
     args: List[str]
     environment: List[KubernetesEnvironmentVariable]
     extraYaml: str
+    labels: Optional[Dict[str, str]] = field(default_factory=dict)
+    postStart: Optional[List[str]] = field(default_factory=list)
+    preStop: Optional[List[str]] = field(default_factory=list)
 
 
 @dataclass
@@ -372,5 +375,6 @@ class ListCourseEnvironmentsResultJson:
 class EnrollmentJson:
     username: str
     course: str
+
 
 
