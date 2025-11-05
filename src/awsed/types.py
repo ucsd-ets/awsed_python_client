@@ -171,6 +171,10 @@ class UserLaunchProfileJson:
     application: ApplicationJson
     player: PlayerJson
     course: str
+    displayName: str
+    description: str
+    volumes: Optional[List[dict]] = field(default_factory=list)
+    zone: Optional[Any] = None
 
 
 @dataclass
@@ -368,4 +372,5 @@ class ListCourseEnvironmentsResultJson:
 class EnrollmentJson:
     username: str
     course: str
+
 
