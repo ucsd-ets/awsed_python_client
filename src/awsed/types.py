@@ -147,8 +147,8 @@ class ApplicationJson:
     image: str
     description: str
     pullPolicy: str
-    volumeMounts: List[KubernetesVolumeMount]
-    volumes: List[KubernetesVolume]
+    volumeMounts: Optional[List[KubernetesVolumeMount]]
+    volumes: Optional[List[KubernetesVolume]]
     command: str
     args: List[str]
     environment: List[KubernetesEnvironmentVariable]
@@ -368,3 +368,4 @@ class ListCourseEnvironmentsResultJson:
 class EnrollmentJson:
     username: str
     course: str
+
