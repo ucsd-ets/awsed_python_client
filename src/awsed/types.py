@@ -147,13 +147,13 @@ class ApplicationJson:
     image: str
     description: str
     pullPolicy: str
-    volumeMounts: Optional[List[KubernetesVolumeMount]]
-    volumes: Optional[List[KubernetesVolume]]
+    volumeMounts: Optional[List[KubernetesVolumeMount]] = field(default_factory=list)
+    volumes: Optional[List[KubernetesVolume]] = field(default_factory=list)
     command: str
-    args: List[str]
-    environment: List[KubernetesEnvironmentVariable]
+    args: Optional[List[str]] = field(default_factory=list)
+    environment: Optional[List[KubernetesEnvironmentVariable]] = field(default_factory=list)
     extraYaml: str
-    labels: Optional[Dict[str, str]] = field(default_factory=dict)
+    labels: Optional[Dict[str, Optional[str]]] = field(default_factory=dict)
     postStart: Optional[List[str]] = field(default_factory=list)
     preStop: Optional[List[str]] = field(default_factory=list)
 
@@ -375,6 +375,7 @@ class ListCourseEnvironmentsResultJson:
 class EnrollmentJson:
     username: str
     course: str
+
 
 
 
