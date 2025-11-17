@@ -154,8 +154,7 @@ class ApplicationJson:
     args: Optional[List[str]] = field(default_factory=list)
     environment: Optional[List[KubernetesEnvironmentVariable]] = field(default_factory=list)
     labels: Optional[Dict[str, Optional[str]]] = field(default_factory=dict)
-    postStart: Optional[List[str]] = field(default_factory=list)
-    preStop: Optional[List[str]] = field(default_factory=list)
+    lifecycle: Optional[Dict[str, Any]] = None
 
 
 @dataclass
@@ -375,6 +374,7 @@ class ListCourseEnvironmentsResultJson:
 class EnrollmentJson:
     username: str
     course: str
+
 
 
 
