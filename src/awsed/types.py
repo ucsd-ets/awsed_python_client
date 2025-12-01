@@ -167,6 +167,14 @@ class PlayerJson:
     maxMemory: int
     gpu: int
 
+@dataclass
+class Zone:
+    name: str
+    nodeSelector: str
+    tolerations: str
+    type: str
+    labels: str
+    weight: int
 
 @dataclass
 class UserLaunchProfileJson:
@@ -177,7 +185,7 @@ class UserLaunchProfileJson:
     displayName: str
     description: str
     volumes: Optional[List[dict]] = field(default_factory=list)
-    zone: Optional[Any] = None
+    zones: List[Zone] = field(default_factory=list)
 
 
 @dataclass
@@ -375,6 +383,7 @@ class ListCourseEnvironmentsResultJson:
 class EnrollmentJson:
     username: str
     course: str
+
 
 
 
