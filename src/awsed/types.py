@@ -170,7 +170,7 @@ class PlayerJson:
 @dataclass
 class Zone:
     name: str
-    tolerations: dict[str, Any]
+    tolerations: List[dict[str, Any]]
     type: str
     labels: str
     weight: int
@@ -382,6 +382,7 @@ class ListCourseEnvironmentsResultJson:
 class EnrollmentJson:
     username: str
     course: str
+
 
 
 
