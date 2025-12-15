@@ -170,7 +170,7 @@ class PlayerJson:
 @dataclass
 class Zone:
     name: str
-    nodeSelector: str
+    nodeSelector: Optional[str]
     tolerations: str
     type: str
     labels: str
@@ -383,6 +383,7 @@ class ListCourseEnvironmentsResultJson:
 class EnrollmentJson:
     username: str
     course: str
+
 
 
 
