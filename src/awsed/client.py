@@ -275,7 +275,7 @@ class DefaultAwsedClient(AbstractAwsedClient):
     ) -> requests.Response:
         full_url = self.endpoint + url
         headers = headers or self.auth()
-
+        headers['Content-Type'] = 'application/json'
         data_json = json.dumps(data, default=lambda o: o.__dict__)
 
         result = requests.patch(
